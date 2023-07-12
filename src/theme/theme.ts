@@ -1,4 +1,4 @@
-import { Button } from './Button';
+import { Text } from './Text';
 import { extendTheme, ThemeConfig } from '@chakra-ui/react';
 
 const config = {
@@ -16,6 +16,10 @@ const config = {
     textMain: 'rgba(255, 255, 255, 0.55)',
     grayGrad:
       'linear-gradient(180deg, #3C415A 0%, rgba(60, 65, 90, 0.00) 100%)',
+  },
+
+  components: {
+    Text,
   },
 };
 const theme = extendTheme(config);
