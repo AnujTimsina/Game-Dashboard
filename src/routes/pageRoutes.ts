@@ -1,6 +1,7 @@
 const pageRoutes = {
   dashboard: '/',
-
+  profitReport: '/profit-report',
+  userProfile: '/user',
   allRoute: '*',
 };
 

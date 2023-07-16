@@ -8,12 +8,17 @@ const config = {
   colors: {
     primary: '#111',
     secondary: 'linear-gradient(180deg, #181A29 0%, #1D2331 100%)',
+    whiteCard: '#F5F7F9',
     cardBg: 'linear-gradient(90deg, #181A29 0%, #1D2331 100%)',
+    cardBg2: 'linear-gradient(133deg, #1D2331 45.83%, #181A29 100%)',
+
     yellowBg: '#FFDA3A',
     btn: 'linear-gradient(180deg, #FFDA3A 0%, #CD3214 100%)',
     miniCard: '#3C415A',
     searchBg: '#1D2331',
     textMain: 'rgba(255, 255, 255, 0.55)',
+    grayText: 'rgba(27, 32, 46, 0.75)',
+
     grayGrad:
       'linear-gradient(180deg, #3C415A 0%, rgba(60, 65, 90, 0.00) 100%)',
   },

@@ -96,10 +96,25 @@ export const Text: ComponentStyleConfig = {
       fontSize: '1.563rem',
       fontStyle: 'normal',
     },
+
     cardSubContent: {
       fontSize: '0.875rem',
       fontWeight: '600',
       color: 'rgba(255, 255, 255, 0.75)',
+    },
+    dateContentValue: {
+      color: 'rgba(255, 255, 255, 0.85)',
+      fontFamily: 'Open Sans',
+      fontSize: '0.75rem',
+      fontStyle: 'normal',
+      fontWeight: '400',
+    },
+    dateContent: {
+      color: '#FFF',
+      fontFamily: 'Open Sans',
+      fontSize: '12px',
+      fontStyle: 'normal',
+      fontWeight: '700',
     },
   },
 };

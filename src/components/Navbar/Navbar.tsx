@@ -1,72 +1,50 @@
-import React, { ReactNode } from 'react';
 import {
-  IconButton,
-  Avatar,
   Box,
+  BoxProps,
   CloseButton,
-  Flex,
-  HStack,
-  VStack,
-  Icon,
-  useColorModeValue,
-  Link,
   Drawer,
   DrawerContent,
-  Text,
-  useDisclosure,
-  BoxProps,
+  Flex,
   FlexProps,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
-  Button,
-  InputGroup,
-  InputLeftElement,
-  Input,
-  Show,
+  HStack,
   Hide,
   Image,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Link,
+  Show,
+  Text,
+  VStack,
+  useDisclosure,
 } from '@chakra-ui/react';
+import React, { Children, ReactNode } from 'react';
+import { NavLink } from 'react-router-dom';
 import {
-  FiHome,
-  FiTrendingUp,
-  FiCompass,
-  FiStar,
-  FiSettings,
-  FiMenu,
-  FiBell,
-  FiChevronDown,
-} from 'react-icons/fi';
-import { IconType } from 'react-icons';
-import { ReactText } from 'react';
-import {
-  FavouritesIcon,
-  FilesIcon,
-  Settings,
-  ProfileLogo,
   ConsoleIcon,
-  ProfitReport,
-  UserIcon,
-  SearchIcon,
-  FilterIcon,
   DollarIcon,
-  ResetIcon,
+  DrawerIcon,
+  FilesIcon,
+  FilterIcon,
   LogoutIcon,
   MoveIcon,
-  DrawerIcon,
+  ProfileLogo,
+  ProfitReport,
+  ResetIcon,
+  SearchIcon,
+  UserIcon,
 } from 'src/assets/images';
-import { NavLink } from 'react-router-dom';
+import { pageRoutes } from 'src/routes/pageRoutes';
 
 interface LinkItemProps {
   name: string;
   icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+  route: string;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'CONSOLE', icon: FilesIcon },
-  { name: 'PROFIT REPORT', icon: FilesIcon },
-  { name: 'GAME USER', icon: FilesIcon },
+  { name: 'CONSOLE', icon: FilesIcon, route: pageRoutes.dashboard },
+  { name: 'PROFIT REPORT', icon: FilesIcon, route: pageRoutes.profitReport },
+  { name: 'GAME USER', icon: FilesIcon, route: pageRoutes.userProfile },
 ];
 
 export default function SidebarWithHeader({
@@ -98,7 +76,7 @@ export default function SidebarWithHeader({
       <MobileNav onOpen={onOpen} />
       <Box
         ml={{ base: '0', lg: '9.438rem' }}
-        p={{ base: '30px 20px 0px 20px', lg: '40px 24px 40px 24px' }}
+        p={{ base: '0px 0px', lg: '0px 24px 40px 24px' }}
       >
         {children}
       </Box>
@@ -147,7 +125,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       </VStack>
       <VStack mt={'35px'} gap={'45px'}>
         {LinkItems.map((link) => (
-          <NavItem key={link.name} icon={link.icon}>
+          <NavItem key={link.name} icon={link.icon} route={link.route}>
             {link.name}
           </NavItem>
         ))}
@@ -158,36 +136,24 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 
 interface NavItemProps extends FlexProps {
   icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+  route: string;
 }
-const NavItem = ({ children, ...rest }: NavItemProps) => {
+const NavItem = ({ route, children, ...rest }: NavItemProps) => {
   return (
     <Link
       as={NavLink}
-      href="#"
+      // href={route}
       style={{ textDecoration: 'none' }}
       color={'textMain'}
       fontWeight={'600'}
       fontSize={'0.875rem'}
       cursor="pointer"
       _active={{ bg: 'red', fontWeight: '600', fontSize: '19px' }}
+      _selected={{ bg: 'green' }}
       _focus={{ boxShadow: 'none' }}
-      to={'/'}
+      to={route}
     >
-      {/* <Flex
-        align="center"
-        p="4"
-        mx="4"
-        borderRadius="lg"
-        role="group"
-        _hover={{
-          bg: 'cyan.400',
-          color: 'white',
-        }}
-        {...rest}
-      > */}
       {children}
-
-      {/* </Flex> */}
     </Link>
   );
 };
@@ -206,18 +172,18 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         icon={<FiMenu />}
       /> */}
       <VStack
-        spacing={{ base: '6' }}
+        spacing={{ base: '2', lg: '6' }}
         w={'100%'}
         justify={'space-between'}
-        p={{ lg: '25px 24px 0px 24px' }}
+        // p={{ lg: '0px 24px 0px 24px' }}
         ml={{ base: '0', lg: '9.438rem' }}
         alignItems="center"
         justifyContent={'center'}
       >
         <HStack
           // display={{ base: 'none', lg: 'flex' }}
-          spacing={{ base: '6' }}
-          p={{ base: '30px 20px' }}
+          spacing={{ base: '2', lg: '6' }}
+          p={{ base: '15px 10px', lg: '30px 20px' }}
           w={'100%'}
           bg={{ base: 'searchBg', lg: 'none' }}
           justify={'space-between'}
@@ -277,7 +243,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               bg={'secondary'}
               borderTopLeftRadius={'10px'}
               borderBottomLeftRadius={'10px'}
-              p={'10px 15px'}
+              p={{ base: '8px 8px', lg: '10px 15px' }}
             >
               <DollarIcon />
               <Text>450.00</Text>
@@ -285,7 +251,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
             <Box
               borderTopRightRadius={'10px'}
               borderBottomRightRadius={'10px'}
-              p={'10px 15px'}
+              p={{ base: '8px', lg: '10px 15px' }}
               bg={'btn'}
             >
               <Text>Balance</Text>
@@ -294,7 +260,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
           <HStack justify={'flex-end'} gap={'1rem'}>
             <HStack
               bg={'secondary'}
-              p={'10px'}
+              p={{ base: '8px', lg: '10px' }}
               borderRadius={'10px'}
               cursor={'pointer'}
               maxW={'124px'}
@@ -302,7 +268,11 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               <ResetIcon />
               <Text>Reset</Text>
             </HStack>
-            <Box bg={'yellowBg'} borderRadius={'10px'} p={'10px'}>
+            <Box
+              bg={'yellowBg'}
+              borderRadius={'10px'}
+              p={{ base: '8px', lg: '10px' }}
+            >
               <LogoutIcon />
             </Box>
             <Hide below="lg">
@@ -311,52 +281,15 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               </Box>
             </Hide>
           </HStack>
-          {/* <Flex alignItems={'center'}>
-          <Menu>
-            <MenuButton
-              py={2}
-              transition="all 0.3s"
-              _focus={{ boxShadow: 'none' }}
-            >
-              <HStack>
-                <Avatar
-                  size={'sm'}
-                  src={
-                    'https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-                  }
-                />
-                <VStack
-                  display={{ base: 'none', md: 'flex' }}
-                  alignItems="flex-start"
-                  spacing="1px"
-                  ml="2"
-                >
-                  <Text fontSize="sm">Justina Clark</Text>
-                  <Text fontSize="xs" color="gray.600">
-                    Admin
-                  </Text>
-                </VStack>
-                <Box display={{ base: 'none', md: 'flex' }}>
-                  <FiChevronDown />
-                </Box>
-              </HStack>
-            </MenuButton>
-            <MenuList
-              bg={useColorModeValue('white', 'gray.900')}
-              borderColor={useColorModeValue('gray.200', 'gray.700')}
-            >
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>Settings</MenuItem>
-              <MenuItem>Billing</MenuItem>
-              <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
-            </MenuList>
-          </Menu>
-        </Flex> */}
         </HStack>
         <Show below="lg">
-          <HStack w={'100%'} justify={'space-around'} gap={'1rem'}>
-            <InputGroup bg={'white'} borderRadius={'10px'} maxW={'300px'}>
+          <HStack
+            w={'100%'}
+            justify={'space-between'}
+            gap={'1rem'}
+            p={'15px 10px'}
+          >
+            <InputGroup bg={'white'} borderRadius={'10px'}>
               <InputLeftElement pointerEvents="none">
                 <SearchIcon fill="black" stroke="black" />
               </InputLeftElement>
