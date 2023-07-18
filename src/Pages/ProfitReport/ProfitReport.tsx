@@ -27,12 +27,12 @@ export default function ProfitReport() {
       gap={0}
       w={'100%'}
       h={'100vh'}
-      bg={'transparent'}
+      // bg={'transparent'}
       justify={'space-between'}
     >
       <VStack
         w={'100%'}
-        // h={'100vh'}
+        h={'100vh'}
         bg={'cardBg'}
         p={{ base: '15px 20px ' }}
         borderRadius={'10px'}

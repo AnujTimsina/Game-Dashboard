@@ -1,6 +1,6 @@
 import { Text } from './Text';
 import { extendTheme, ThemeConfig } from '@chakra-ui/react';
-
+import Alert from './Alert';
 const config = {
   initialColorMode: 'light',
   useSystemColorMode: false,
@@ -18,13 +18,14 @@ const config = {
     searchBg: '#1D2331',
     textMain: 'rgba(255, 255, 255, 0.55)',
     grayText: 'rgba(27, 32, 46, 0.75)',
-
+    placeHolder: 'rgba(255, 255, 255, 0.75)',
     grayGrad:
       'linear-gradient(180deg, #3C415A 0%, rgba(60, 65, 90, 0.00) 100%)',
   },
 
   components: {
     Text,
+    Alert,
   },
 };
 const theme = extendTheme(config);

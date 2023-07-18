@@ -19,6 +19,7 @@ export { ReactComponent as MoneyIcon } from './fluent_money.svg';
 export { ReactComponent as DrawerIcon } from './drawer_menu.svg';
 export { ReactComponent as PageUp } from './page_up.svg';
 export { ReactComponent as PageDown } from './page_down.svg';
+export { ReactComponent as AddUser } from './add-user.svg';
 
 //png
 import ProfileLogo from './profile.png';
