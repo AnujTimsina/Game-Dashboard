@@ -1,6 +1,7 @@
 import { Text } from './Text';
 import { extendTheme, ThemeConfig } from '@chakra-ui/react';
 import Alert from './Alert';
+import Switch from './Switch';
 const config = {
   initialColorMode: 'light',
   useSystemColorMode: false,
@@ -13,12 +14,14 @@ const config = {
     cardBg2: 'linear-gradient(133deg, #1D2331 45.83%, #181A29 100%)',
 
     yellowBg: '#FFDA3A',
+    crossIcon: '#FEEAB5',
     btn: 'linear-gradient(180deg, #FFDA3A 0%, #CD3214 100%)',
     miniCard: '#3C415A',
     searchBg: '#1D2331',
     textMain: 'rgba(255, 255, 255, 0.55)',
     grayText: 'rgba(27, 32, 46, 0.75)',
     placeHolder: 'rgba(255, 255, 255, 0.75)',
+    activeSubMenu: '#F4E9CB',
     grayGrad:
       'linear-gradient(180deg, #3C415A 0%, rgba(60, 65, 90, 0.00) 100%)',
   },
@@ -26,6 +29,7 @@ const config = {
   components: {
     Text,
     Alert,
+    Switch,
   },
 };
 const theme = extendTheme(config);

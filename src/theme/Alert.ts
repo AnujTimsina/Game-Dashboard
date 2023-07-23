@@ -8,6 +8,9 @@ const { definePartsStyle, defineMultiStyleConfig } =
   createMultiStyleConfigHelpers(parts.keys);
 
 const baseStyle = definePartsStyle({
+  container: {
+    py: '5px',
+  },
   // define the part you're going to style
   title: {
     color: 'red.400', // change the color of the title text of the alert

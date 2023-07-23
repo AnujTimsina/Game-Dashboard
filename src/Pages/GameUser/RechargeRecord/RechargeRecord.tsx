@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Alert,
   AlertTitle,
@@ -15,27 +16,30 @@ import {
   VStack,
   useBreakpointValue,
 } from '@chakra-ui/react';
+import {
+  AddUser,
+  DropdownIcon,
+  ResetIcon,
+  SearchIcon2,
+} from 'src/assets/images';
+import Footer from 'src/Pages/ProfitReport/Footer';
 import { createColumnHelper } from '@tanstack/react-table';
-import { AddUser, ResetIcon, SearchIcon2 } from 'src/assets/images';
-import Footer from '../ProfitReport/Footer';
-import { DataTable } from './DataTable';
 import { ChevronDownIcon } from '@chakra-ui/icons';
-import VerticalTable from './MobileDataTable';
 
-export type GameData = {
-  id: JSX.Element;
-  status: JSX.Element;
-  username: string;
-  nickname: string;
-  balance: number;
-  create_time: string;
-  login_times: number;
-  last_login_times: string;
-  last_login_ip: string;
-  operation: JSX.Element;
-};
+export default function RechargeRecord() {
+  type GameData = {
+    id: JSX.Element;
+    status: JSX.Element;
+    username: string;
+    nickname: string;
+    balance: number;
+    create_time: string;
+    login_times: number;
+    last_login_times: string;
+    last_login_ip: string;
+    operation: JSX.Element;
+  };
 
-export default function GameUser() {
   const data: GameData[] = [
     {
       id: <Text color={'yellowBg'}> 200</Text>,
@@ -144,27 +148,8 @@ export default function GameUser() {
       header: 'Operation',
     }),
   ];
-
-  const addUservalue = useBreakpointValue({
-    base: <AddUser />,
-    lg: 'Add User',
-  });
-
-  const sampleData = {
-    Name: 'John Doe',
-    Age: 30,
-    Email: 'john.doe@example.com',
-    Occupation: 'Developer',
-    Country: 'United States',
-  };
   return (
     <VStack gap={0} w={'100%'} h={'100vh'} justify={'space-between'}>
-      <Alert size="md" margin={'15px'}>
-        <AlertTitle>
-          Note: Please request players to exit game lobby before you recharge
-          and withdraw
-        </AlertTitle>
-      </Alert>
       <VStack
         w={'100%'}
         h={'100vh'}
@@ -172,7 +157,7 @@ export default function GameUser() {
         p={{ base: '15px 20px ' }}
         borderTopRadius={'10px'}
       >
-        <HStack
+        <Stack
           w={'100%'}
           borderRadius={'10px'}
           p={{ base: '1rem 0.5rem', lg: '1rem 1.5rem' }}
@@ -182,53 +167,80 @@ export default function GameUser() {
           }
           justify={'space-between'}
           gap={'1rem'}
+          flexDir={{ base: 'column', lg: 'row' }}
+          align={'center'}
         >
           <Stack
             gap={{ base: '0.4rem', lg: '1rem' }}
-            // w={'100%'}
-            flexDir={{ base: 'column', lg: 'row' }}
+            w={'100%'}
+            flexDir={{ base: 'row', lg: 'row' }}
+            order={{ base: '2', lg: '1' }}
+            justify={'space-between'}
           >
             <HStack gap={'1rem'} justify={'space-between'}>
-              <Text>ID</Text>
+              <Text w={'100%'} display={{ base: 'none', lg: 'block' }}>
+                Date Range
+              </Text>
               <Input
-                type="text"
+                type="date"
                 color={'white'}
-                placeholder="Please enter ID"
-                _placeholder={{ color: 'placeHolder' }}
+                placeholder="Auto Date range"
+                _placeholder={{ color: 'white' }}
                 border={'none'}
                 boxShadow="0px 2px 2px 0px rgba(0, 0, 0, 0.25), 0px 2px 2px 0px rgba(0, 0, 0, 0.25) inset"
                 p={'10px'}
-                w={{ lg: '240px' }}
               />
-            </HStack>
-            <HStack gap={'1rem'} justify={'space-between'}>
-              <Text>Username</Text>
+              <Text display={{ base: 'none', lg: 'block' }}>To</Text>
               <Input
-                type="text"
+                type="date"
                 color={'white'}
-                placeholder="Please enter ID"
-                _placeholder={{ color: 'placeHolder' }}
+                placeholder="Auto Date range"
+                _placeholder={{ color: 'white' }}
                 border={'none'}
                 boxShadow="0px 2px 2px 0px rgba(0, 0, 0, 0.25), 0px 2px 2px 0px rgba(0, 0, 0, 0.25) inset"
                 p={'10px'}
-                w={{ lg: '240px' }}
+                display={{ base: 'none', lg: 'block' }}
+                //   w={{ lg: '240px' }}
               />
             </HStack>
-            <HStack gap={'1rem'} justify={'space-between'}>
-              <Text>Nickname</Text>
-              <Input
-                type="text"
-                color={'white'}
-                placeholder="Please enter ID"
-                _placeholder={{ color: 'placeHolder' }}
-                border={'none'}
+            <Menu>
+              <MenuButton
+                px={4}
+                py={2}
+                transition="2s ease-in"
+                borderRadius="md"
+                _hover={{ bg: 'gray.400' }}
+                _expanded={{ bg: 'gray.400' }}
+                _focus={{ boxShadow: 'outline' }}
                 boxShadow="0px 2px 2px 0px rgba(0, 0, 0, 0.25), 0px 2px 2px 0px rgba(0, 0, 0, 0.25) inset"
-                p={'10px'}
-                w={{ lg: '240px' }}
-              />
-            </HStack>
+                w={'240px'}
+              >
+                <HStack w={'100%'} justify={'space-between'}>
+                  <Text>Search By Account</Text>
+                  <DropdownIcon />
+                </HStack>
+              </MenuButton>
+              <MenuList>
+                <MenuItem>Yesterday</MenuItem>
+              </MenuList>
+            </Menu>
           </Stack>
-          <Stack flexDir={['column', 'row', 'row']}>
+          <Stack
+            flexDir={['row', 'row', 'row']}
+            order={{ base: '1', lg: '2' }}
+            justify={'space-between'}
+            w={'100%'}
+          >
+            <Input
+              type="text"
+              color={'white'}
+              placeholder="Please enter your search content"
+              _placeholder={{ color: 'placeHolder' }}
+              border={'none'}
+              boxShadow="0px 2px 2px 0px rgba(0, 0, 0, 0.25), 0px 2px 2px 0px rgba(0, 0, 0, 0.25) inset"
+              p={'10px'}
+              //   w={'100%'}
+            />
             <Box
               bg={'searchBg'}
               boxShadow="0px 2px 2px 0px rgba(0, 0, 0, 0.25), 0px 2px 2px 0px rgba(0, 0, 0, 0.25) inset"
@@ -247,18 +259,10 @@ export default function GameUser() {
             >
               <ResetIcon />
             </Box>
-            <Button
-              bg={'yellowBg'}
-              color={'black'}
-              borderRadius={'10px'}
-              p={{ base: '0rem', md: '10px', lg: '14px' }}
-            >
-              {addUservalue}
-            </Button>
           </Stack>
-        </HStack>
+        </Stack>
         <Box w={'100%'}>
-          <DataTable columns={columns} data={data} />
+          {/* <DataTable columns={columns} data={data} /> */}
         </Box>
       </VStack>
       <Footer />

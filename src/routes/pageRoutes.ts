@@ -2,6 +2,9 @@ const pageRoutes = {
   dashboard: '/',
   profitReport: '/profit-report',
   userProfile: '/user',
+  redeemRecord: '/redeem-record',
+  rechargeRecord: '/recharge-record',
+  gameRecord: '/game-record',
   allRoute: '*',
 };
 

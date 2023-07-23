@@ -14,6 +14,7 @@ export { ReactComponent as MoveIcon } from './arrow-move.svg';
 export { ReactComponent as DropdownIcon } from './arrow-down.svg';
 export { ReactComponent as DropdownBlackIcon } from './dropdown-black.svg';
 export { ReactComponent as DropdownCloseIcon } from './close-dropdown.svg';
+export { ReactComponent as DrawerCloseIcon } from './close-drawer.svg';
 export { ReactComponent as PersonIcon } from './pencil_persons.svg';
 export { ReactComponent as MoneyIcon } from './fluent_money.svg';
 export { ReactComponent as DrawerIcon } from './drawer_menu.svg';

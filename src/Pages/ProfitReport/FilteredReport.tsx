@@ -22,6 +22,7 @@ export default function FilteredReport() {
     { title: 'Income', value: '0.0' },
     { title: 'Profit Percentage', value: '0.0' },
   ];
+
   return (
     <Grid
       templateColumns="repeat(3, 1fr)"

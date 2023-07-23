@@ -83,7 +83,6 @@ export default function ProfitReport() {
               py={2}
               transition="2s ease-in"
               borderRadius="md"
-              //   borderWidth="1px"
               _hover={{ bg: 'gray.400' }}
               _expanded={{ bg: 'gray.400' }}
               _focus={{ boxShadow: 'outline' }}
@@ -96,11 +95,7 @@ export default function ProfitReport() {
               </HStack>
             </MenuButton>
             <MenuList>
-              <MenuItem>New File</MenuItem>
-              <MenuItem>New Window</MenuItem>
-              <MenuDivider />
-              <MenuItem>Open...</MenuItem>
-              <MenuItem>Save File</MenuItem>
+              <MenuItem>Yesterday</MenuItem>
             </MenuList>
           </Menu>
         </HStack>

@@ -1,11 +1,6 @@
 {
-  "name": "vibrant",
+  "name": "game_dashboard",
   "version": "0.0.0",
-  "author": {
-    "name": "David Sima",
-    "email": "hello@david-sima.dev",
-    "url": "https://github.com/The24thDS"
-  },
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -27,6 +22,7 @@
     "@chakra-ui/react": "^2.7.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@tanstack/react-table": "8.5.11",
     "framer-motion": "^10.12.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
