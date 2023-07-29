@@ -1,6 +1,7 @@
 import { Text } from './Text';
 import { extendTheme, ThemeConfig } from '@chakra-ui/react';
 import Alert from './Alert';
+import Radio from './Radio';
 import Switch from './Switch';
 const config = {
   initialColorMode: 'light',
@@ -12,6 +13,9 @@ const config = {
     whiteCard: '#F5F7F9',
     cardBg: 'linear-gradient(90deg, #181A29 0%, #1D2331 100%)',
     cardBg2: 'linear-gradient(133deg, #1D2331 45.83%, #181A29 100%)',
+    modalBg: '#F5F5F5',
+    modalText: '#1E1E1E',
+    blueBg: '#409EFF',
 
     yellowBg: '#FFDA3A',
     crossIcon: '#FEEAB5',
@@ -30,6 +34,7 @@ const config = {
     Text,
     Alert,
     Switch,
+    Radio,
   },
 };
 const theme = extendTheme(config);

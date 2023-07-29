@@ -14,6 +14,7 @@ import {
   Text,
   VStack,
   useBreakpointValue,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { AddUser, ResetIcon, SearchIcon2 } from 'src/assets/images';
@@ -21,6 +22,7 @@ import Footer from '../ProfitReport/Footer';
 import { DataTable } from './DataTable';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import VerticalTable from './MobileDataTable';
+import AddUserModal from './AddUserModal/AddUserModal';
 
 export type GameData = {
   id: JSX.Element;
@@ -36,6 +38,7 @@ export type GameData = {
 };
 
 export default function GameUser() {
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const data: GameData[] = [
     {
       id: <Text color={'yellowBg'}> 200</Text>,
@@ -150,12 +153,8 @@ export default function GameUser() {
     lg: 'Add User',
   });
 
-  const sampleData = {
-    Name: 'John Doe',
-    Age: 30,
-    Email: 'john.doe@example.com',
-    Occupation: 'Developer',
-    Country: 'United States',
+  const handleAddUser = () => {
+    onOpen();
   };
   return (
     <VStack gap={0} w={'100%'} h={'100vh'} justify={'space-between'}>
@@ -252,6 +251,7 @@ export default function GameUser() {
               color={'black'}
               borderRadius={'10px'}
               p={{ base: '0rem', md: '10px', lg: '14px' }}
+              onClick={handleAddUser}
             >
               {addUservalue}
             </Button>
@@ -262,6 +262,7 @@ export default function GameUser() {
         </Box>
       </VStack>
       <Footer />
+      <AddUserModal isOpen={isOpen} onClose={onClose} />
     </VStack>
   );
 }
