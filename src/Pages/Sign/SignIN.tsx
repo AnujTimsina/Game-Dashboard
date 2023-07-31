@@ -19,27 +19,47 @@ import { PasswordField } from './PasswordField';
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from 'src/utils/api';
+import { usePost } from 'src/utils/reactQuery';
+import { useAuth } from 'src/components/AuthProvider/AuthProvider';
+import { BACKEND_URL } from 'src/config/config';
+import { apiRoutes, pageRoutes } from 'src/routes/pageRoutes';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUser } from 'src/store/user/slices/userSlice';
+import { RootState } from 'src/store';
+import { IUser } from 'src/interfaces/user';
 
 const SignIN = () => {
   // const { login } = useUtils();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { setToken } = useAuth();
 
-  const handleSignIn = async () => {
-    const payload = {
-      username: username,
-      password: password,
-      // username: 'kshitij@chand.network',
-      // password: 'TheRocket@124',
+  const user = useSelector((state: RootState) => state.gameUser);
+
+  const loginMutation = usePost<
+    { userName: string; password: string; logonAddress: string },
+    any
+  >(`${BACKEND_URL}${apiRoutes.login}`);
+
+  const handleLogin = async () => {
+    const data = {
+      userName: 'hero',
+      password: 'password1',
+      logonAddress: '192.168.1.2',
     };
 
-    // const token = await login(payload.username, payload.password);
+    const result = await loginMutation.mutateAsync(data);
 
-    // setToken(token);
+    dispatch(updateUser(result.data.user as IUser));
+    setToken(result.data.tokens.access.token as string);
+
     navigate('/', { replace: true });
   };
 
   const [username, setusername] = useState('');
   const [password, setpassword] = useState('');
+
   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value) setusername(e.target.value);
   };
@@ -102,7 +122,8 @@ const SignIN = () => {
                 border="1px solid #C11506, #FE3A3A"
                 background=" radial-gradient(122.87% 59.62% at 50.00% 50.00%, #BF4922 0%, #9D1F14 100%),radial-gradient(155.82% 49.86% at 50.14% 50.88%, rgba(193, 21, 6, 0.15) 19.79%, rgba(254, 58, 58, 0.15) 100%)            "
                 // backdropilter: blur(22.5px);
-                onClick={handleSignIn}
+                onClick={handleLogin}
+                isLoading={loginMutation.isLoading}
               >
                 Sign In
               </Button>

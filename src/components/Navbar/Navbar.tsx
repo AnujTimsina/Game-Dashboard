@@ -42,6 +42,10 @@ import {
   UserIcon,
 } from 'src/assets/images';
 import { pageRoutes } from 'src/routes/pageRoutes';
+import { useAuth } from '../AuthProvider/AuthProvider';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetUser, updateUser } from 'src/store/user/slices/userSlice';
+import { RootState } from 'src/store';
 
 interface LinkItemProps {
   name: string;
@@ -107,8 +111,8 @@ export default function SidebarWithHeader({
           </DrawerContent>
         </Drawer>
       </Show>
-      {/* mobilenav */}
-      <MobileNav onOpen={onOpen} />
+      {/* Header */}
+      <Header onOpen={onOpen} />
       <Box
         ml={{ base: '0', lg: '9.438rem' }}
         p={{ base: '0px 0px', lg: '0px 24px 40px 24px' }}
@@ -255,27 +259,26 @@ const NavItem = ({ route, children, subMenu }: NavItemProps) => {
 interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+const Header = ({ onOpen, ...rest }: MobileProps) => {
+  const { setToken } = useAuth();
+  const dispatch = useDispatch();
+  const gameUser = useSelector((state: RootState) => state.gameUser);
+  const handleLogout = () => {
+    setToken(null);
+    dispatch(resetUser());
+  };
+
   return (
     <Flex>
-      {/* <IconButton
-        display={{ base: 'flex', md: 'none' }}
-        onClick={onOpen}
-        variant="outline"
-        aria-label="open menu"
-        icon={<FiMenu />}
-      /> */}
       <VStack
         spacing={{ base: '2', lg: '6' }}
         w={'100%'}
         justify={'space-between'}
-        // p={{ lg: '0px 24px 0px 24px' }}
         ml={{ base: '0', lg: '9.438rem' }}
         alignItems="center"
         justifyContent={'center'}
       >
         <HStack
-          // display={{ base: 'none', lg: 'flex' }}
           spacing={{ base: '2', lg: '6' }}
           p={{ base: '15px 10px', lg: '30px 20px' }}
           w={'100%'}
@@ -342,7 +345,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               p={{ base: '8px 8px', lg: '10px 15px' }}
             >
               <DollarIcon />
-              <Text>450.00</Text>
+              <Text>{gameUser.balance}</Text>
             </HStack>
             <Box
               borderTopRightRadius={'10px'}
@@ -368,6 +371,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               bg={'yellowBg'}
               borderRadius={'10px'}
               p={{ base: '8px', lg: '10px' }}
+              onClick={handleLogout}
             >
               <LogoutIcon />
             </Box>

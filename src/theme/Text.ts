@@ -116,5 +116,12 @@ export const Text: ComponentStyleConfig = {
       fontStyle: 'normal',
       fontWeight: '700',
     },
+    error: {
+      color: 'rgba(255, 58, 58, 0.75)',
+      fontFamily: 'Open Sans',
+      fontSize: '0.563rem',
+      fontStyle: 'normal',
+      fontWeight: 600,
+    },
   },
 };

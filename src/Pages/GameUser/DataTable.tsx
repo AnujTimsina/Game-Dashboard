@@ -59,8 +59,6 @@ export function DataTable<Data extends object>({
     { title: 'Profit Percentage', value: '0.0' },
   ];
 
-  console.log(table.getRowModel().rows);
-
   interface mobileData {
     id: { header: 'ID'; value: JSX.Element };
     status: { header: 'Status'; value: JSX.Element };
@@ -178,8 +176,9 @@ export function DataTable<Data extends object>({
         </Table>
       </Box>
       <VStack display={{ base: 'flex', lg: 'none' }} gap={'1rem'}>
-        {formattedData.map((item) => (
+        {formattedData.map((item, id) => (
           <Grid
+            key={id}
             templateColumns="repeat(3, 1fr)"
             gap={4}
             w={'100%'}
@@ -225,17 +224,20 @@ export function DataTable<Data extends object>({
               {showDetails &&
                 Object.values(item)
                   .slice(2)
-                  .map((el) => (
-                    <HStack w={'100%'} justify={'space-between'}>
-                      <Text variant={'dateContent'}>{el.header}</Text>
-                      {typeof el.value === 'string' ||
-                      typeof el.value === 'number' ? (
-                        <Text variant={'dateContentValue'}>{el.value}</Text>
-                      ) : (
-                        el.value
-                      )}
-                    </HStack>
-                  ))}
+                  .map((el) => {
+                    // console.log(el.value);
+                    return (
+                      <HStack w={'100%'} justify={'space-between'}>
+                        <Text variant={'dateContent'}>{el.header}</Text>
+                        {typeof el.value === 'string' ||
+                        typeof el.value === 'number' ? (
+                          <Text variant={'dateContentValue'}>{el.value}</Text>
+                        ) : (
+                          el.value
+                        )}
+                      </HStack>
+                    );
+                  })}
             </GridItem>
           </Grid>
         ))}

@@ -4,8 +4,6 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 interface AuthContextType {
   token: string | null;
   setToken: (newToken: string | null) => void;
-  xtoken: string | null;
-  setxToken: (newToken: string | null) => void;
 }
 
 interface AuthProviderProps {
@@ -20,23 +18,14 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.getItem('token')
   );
 
-  const [xtoken, setxToken_] = useState<string | null>(
-    localStorage.getItem('xtoken')
-  );
-
   // Function to set the authentication token
   const setToken = (newToken: string | null) => {
     setToken_(newToken);
   };
 
-  const setxToken = (newToken: string | null) => {
-    setxToken_(newToken);
-  };
-
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
-
       localStorage.setItem('token', token);
     } else {
       delete axios.defaults.headers.common['Authorization'];
@@ -44,27 +33,13 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, [token]);
 
-  useEffect(() => {
-    if (xtoken) {
-      // axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
-      axios.defaults.headers.common['x-id-token'] = xtoken;
-
-      localStorage.setItem('xtoken', xtoken);
-    } else {
-      delete axios.defaults.headers.common['x-id-token'];
-      localStorage.removeItem('xtoken');
-    }
-  }, [xtoken]);
-
   // Memoized value of the authentication context
   const contextValue = useMemo<AuthContextType>(
     () => ({
       token,
       setToken,
-      setxToken,
-      xtoken,
     }),
-    [token, xtoken]
+    [token]
   );
 
   // Provide the authentication context to the children components

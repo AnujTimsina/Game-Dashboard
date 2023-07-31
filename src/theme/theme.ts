@@ -16,6 +16,7 @@ const config = {
     modalBg: '#F5F5F5',
     modalText: '#1E1E1E',
     blueBg: '#409EFF',
+    errorText: 'rgba(255, 58, 58, 0.75)',
 
     yellowBg: '#FFDA3A',
     crossIcon: '#FEEAB5',
