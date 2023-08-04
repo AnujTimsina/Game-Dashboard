@@ -269,6 +269,8 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
     dispatch(resetUser());
   };
 
+  console.log(gameUser, 'gameuser');
+
   return (
     <Flex>
       <VStack
@@ -373,6 +375,7 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
               borderRadius={'10px'}
               p={{ base: '8px', lg: '10px' }}
               onClick={handleLogout}
+              cursor={'pointer'}
             >
               <LogoutIcon />
             </Box>

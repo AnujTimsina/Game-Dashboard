@@ -17,3 +17,6 @@ export const useGetUserTransactions = (id: string, page: number) =>
     page: page,
     populate: 'actionBy,actionTo',
   });
+
+export const useGetUser = (id: string) =>
+  useFetch<IUser>(`${BACKEND_URL}/users/${id}`);

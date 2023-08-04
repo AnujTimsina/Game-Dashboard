@@ -33,7 +33,7 @@ const SignIN = () => {
   // const { login } = useUtils();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { setToken } = useAuth();
+  const { setToken, setRefreshToken } = useAuth();
 
   const [username, setusername] = useState('');
   const [password, setpassword] = useState('');
@@ -44,12 +44,6 @@ const SignIN = () => {
   >(`${BACKEND_URL}${apiRoutes.login}`);
 
   const handleLogin = async () => {
-    // const data = {
-    //   userName: 'hero',
-    //   password: 'password1',
-    //   logonAddress: '192.168.1.2',
-    // };
-
     const data = {
       userName: username,
       password: password,
@@ -57,7 +51,7 @@ const SignIN = () => {
     };
     const result = await loginMutation.mutateAsync(data);
 
-    dispatch(updateUser(result.data.user as IUser));
+    setRefreshToken(result.data.tokens.refresh.token as string);
     setToken(result.data.tokens.access.token as string);
 
     navigate('/', { replace: true });
