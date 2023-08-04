@@ -1,15 +1,10 @@
 const apiRoutes = {
   login: '/auth/login',
   addUser: '/users',
-
-  // getTokenByPassword: '/api/getTokenByPassword',
-  // getProfile: '/api/getProfile',
-  // getUserList: '/api/getUserList',
-  // appointment: '/api/appointment/:id',
-  // getServices: '/api/getServices',
-  // getCarDetail: '/api/getCarDetail/:id',
-  // getInsurance: '/api/getInsurance/:id',
-  // job: '/api/job/:id?',
+  transactions: '/transactions',
+  getUserTransactions: '/transactions/:id',
+  subUsers: '/users/:id/subUsers',
+  getUser: '/users/:id',
 };
 
 const pageRoutes = {

@@ -28,22 +28,21 @@ import {
   getSortedRowModel,
 } from '@tanstack/react-table';
 import { DropdownBlackIcon, DropdownCloseIcon } from 'src/assets/images';
-import { IUser, IUserFormatted } from 'src/interfaces/user';
-import { IMobileUserData } from 'src/interfaces';
+import { IMobileTransaction, Transaction } from 'src/interfaces/transaction';
 
-export type DataTableProps<IUserFormatted extends object> = {
-  // data: IUserFormatted[];
-  columns: ColumnDef<IUserFormatted, any>[];
-  userData: IUserFormatted[];
-  mobileData: IMobileUserData[];
+export type RechargeTableProps<Transaction extends object> = {
+  // data: Transaction[];
+  columns: ColumnDef<Transaction, any>[];
+  transactions: Transaction[];
+  mobileData: IMobileTransaction[];
 };
 
-export function DataTable<Data extends object>({
+export function RechargeTable<Data extends object>({
   // data,
   columns,
-  userData: data,
+  transactions: data,
   mobileData,
-}: DataTableProps<IUserFormatted>) {
+}: RechargeTableProps<Transaction>) {
   const [showDetails, setShowDetails] = React.useState(data.map(() => false));
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -142,12 +141,9 @@ export function DataTable<Data extends object>({
               justifyContent={'space-between'}
             >
               <Text variant={'dateContent'}>{item.id.header}</Text>
-              <HStack gap={'16px'}>
-                <Text variant={'dateContentValue'} textAlign="center">
-                  {item.id.value}
-                </Text>
-                {item.status.value}
-              </HStack>
+              <Text variant={'dateContentValue'} textAlign="center">
+                {item.id.value}
+              </Text>
             </GridItem>
             <GridItem colSpan={1} justifyContent={'flex-end'} display="flex">
               <Flex

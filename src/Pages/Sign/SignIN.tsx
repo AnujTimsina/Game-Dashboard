@@ -35,7 +35,8 @@ const SignIN = () => {
   const dispatch = useDispatch();
   const { setToken } = useAuth();
 
-  const user = useSelector((state: RootState) => state.gameUser);
+  const [username, setusername] = useState('');
+  const [password, setpassword] = useState('');
 
   const loginMutation = usePost<
     { userName: string; password: string; logonAddress: string },
@@ -43,12 +44,17 @@ const SignIN = () => {
   >(`${BACKEND_URL}${apiRoutes.login}`);
 
   const handleLogin = async () => {
-    const data = {
-      userName: 'hero',
-      password: 'password1',
-      logonAddress: '192.168.1.2',
-    };
+    // const data = {
+    //   userName: 'hero',
+    //   password: 'password1',
+    //   logonAddress: '192.168.1.2',
+    // };
 
+    const data = {
+      userName: username,
+      password: password,
+      logonAddress: '192.168.1.67',
+    };
     const result = await loginMutation.mutateAsync(data);
 
     dispatch(updateUser(result.data.user as IUser));
@@ -56,9 +62,6 @@ const SignIN = () => {
 
     navigate('/', { replace: true });
   };
-
-  const [username, setusername] = useState('');
-  const [password, setpassword] = useState('');
 
   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value) setusername(e.target.value);
@@ -71,16 +74,21 @@ const SignIN = () => {
   return (
     <VStack
       w={'100%'}
-      // maxW="lg"
       px={{ base: '0', sm: '8' }}
       color={'white'}
-      bg={'grayBg'}
-      borderRadius={'10px'}
+      bg={'cardBg'}
       p={'1rem'}
+      h={'100vh'}
+      justify={'center'}
     >
       {/* <VStack > */}
 
-      <Stack spacing="8">
+      <Stack
+        borderRadius={'10px'}
+        spacing="8"
+        boxShadow={'rgba(0, 0, 0, 0.35) 0px 5px 15px'}
+        p={'1rem'}
+      >
         <Stack spacing="6">
           {/* <Logo /> */}
           <Stack spacing={{ base: '2', md: '3' }} textAlign="center">
@@ -96,7 +104,7 @@ const SignIN = () => {
           py={{ base: '0', sm: '8' }}
           px={{ base: '4', sm: '10' }}
           bg={{ base: 'transparent', sm: 'bg.surface' }}
-          boxShadow={{ base: 'none', sm: 'md' }}
+          // boxShadow={{ base: 'none', sm: 'md' }}
           borderRadius={{ base: 'none', sm: 'xl' }}
         >
           <Stack spacing="6">

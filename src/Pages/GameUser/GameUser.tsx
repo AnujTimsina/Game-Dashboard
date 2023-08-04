@@ -3,12 +3,14 @@ import {
   AlertTitle,
   Box,
   Button,
+  Flex,
   HStack,
   Input,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Spinner,
   Stack,
   Switch,
   Text,
@@ -23,6 +25,13 @@ import { DataTable } from './DataTable';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import VerticalTable from './MobileDataTable';
 import AddUserModal from './AddUserModal/AddUserModal';
+import RechargeModal from './RechargeModal/RechargeModal';
+import { useGetSubUsers } from 'src/api/user';
+import { IUser, IUserFormatted } from 'src/interfaces/user';
+import EditorMenu from './EditorMenu/EditorMenu';
+import { IMobileUserData } from 'src/interfaces';
+import { dateFormatter } from 'src/utils/dateFormatter';
+import { useState } from 'react';
 
 export type GameData = {
   id: JSX.Element;
@@ -38,83 +47,54 @@ export type GameData = {
 };
 
 export default function GameUser() {
-  const { isOpen, onClose, onOpen } = useDisclosure();
-  const data: GameData[] = [
-    {
-      id: <Text color={'yellowBg'}> 200</Text>,
-      status: <Switch size={{ base: 'sm', lg: 'lg' }} variant={'boxy'} />,
-      username: 'john',
-      nickname: 'john nick',
-      balance: 300,
-      create_time: '29-20-2023',
-      login_times: 5,
-      last_login_times: '29-20-2023',
-      last_login_ip: '69.136.237.40',
-      operation: (
-        <Menu size={{ base: 'sm', lg: 'lg' }}>
-          <MenuButton
-            as={Button}
-            rightIcon={<ChevronDownIcon />}
-            bg={'yellowBg'}
-            color={'black'}
-          >
-            Editor
-          </MenuButton>
-          <MenuList>
-            <MenuItem>Download</MenuItem>
-          </MenuList>
-        </Menu>
-      ),
-    },
-    {
-      id: <Text color={'yellowBg'}> 200</Text>,
-      status: <Switch size={{ base: 'sm', lg: 'lg' }} variant={'boxy'} />,
-      username: 'john',
-      nickname: 'john nick',
-      balance: 300,
-      create_time: '29-20-2023',
-      login_times: 5,
-      last_login_times: '29-20-2023',
-      last_login_ip: '69.136.237.40',
-      operation: (
-        <Menu size={{ base: 'sm', lg: 'lg' }}>
-          <MenuButton
-            as={Button}
-            rightIcon={<ChevronDownIcon />}
-            bg={'yellowBg'}
-            color={'black'}
-          >
-            Editor
-          </MenuButton>
-          <MenuList>
-            <MenuItem>Download</MenuItem>
-          </MenuList>
-        </Menu>
-      ),
-    },
-  ];
+  const {
+    isOpen: isOpenRecharge,
+    onClose: onCloseRecharge,
+    onOpen: onOpenRecharge,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenAddUser,
+    onClose: onCloseAddUser,
+    onOpen: onOpenAddUser,
+  } = useDisclosure();
 
-  const columnHelper = createColumnHelper<GameData>();
+  const [page, setpage] = useState(1);
+
+  const {
+    data: gameUsers,
+    isLoading,
+    // fetchNextPage,
+    // hasNextPage,
+    // isFetchingNextPage,
+  } = useGetSubUsers('64c498f30e784498f4dcf778', page);
+
+  const columnHelper = createColumnHelper<IUserFormatted>();
 
   const columns = [
     columnHelper.accessor('id', {
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <Text color={'yellowBg'} title={info.getValue()}>
+          {`${info.getValue().slice(0, 6)}...`}{' '}
+        </Text>
+      ),
       header: 'ID',
       meta: {
         isNumeric: true,
       },
     }),
     columnHelper.accessor('status', {
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <Switch size={{ base: 'sm', lg: 'lg' }} variant={'boxy'} />
+      ),
       header: 'Status',
     }),
-    columnHelper.accessor('username', {
+    columnHelper.accessor('userName', {
       cell: (info) => info.getValue(),
       header: 'Username',
     }),
-    columnHelper.accessor('nickname', {
+    columnHelper.accessor('agentName', {
       cell: (info) => info.getValue(),
-      header: 'Nickname',
+      header: 'Agent Name',
     }),
     columnHelper.accessor('balance', {
       cell: (info) => info.getValue(),
@@ -123,27 +103,32 @@ export default function GameUser() {
         isNumeric: true,
       },
     }),
-    columnHelper.accessor('create_time', {
+    columnHelper.accessor('role', {
       cell: (info) => info.getValue(),
-      header: 'Create Time',
+      header: 'Role',
     }),
-    columnHelper.accessor('login_times', {
+    columnHelper.accessor('loginTimes', {
       cell: (info) => info.getValue(),
       header: 'Login Times',
       meta: {
         isNumeric: true,
       },
     }),
-    columnHelper.accessor('last_login_times', {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor('lastLoginTime', {
+      cell: (info) => dateFormatter(Number(info.getValue())),
       header: 'Last Login Times',
     }),
-    columnHelper.accessor('last_login_ip', {
+    columnHelper.accessor('lastLogonAddress', {
       cell: (info) => info.getValue(),
       header: 'Last Login IP',
     }),
     columnHelper.accessor('operation', {
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <EditorMenu
+          onOpenRecharge={onOpenRecharge}
+          selectedValue={info.getValue()}
+        />
+      ),
       header: 'Operation',
     }),
   ];
@@ -154,8 +139,81 @@ export default function GameUser() {
   });
 
   const handleAddUser = () => {
-    onOpen();
+    onOpenAddUser();
   };
+
+  const userData: IUserFormatted[] | undefined = gameUsers?.results.map(
+    (user) => {
+      const { history, manager, ...rest } = user;
+      return {
+        ...rest,
+        operation: 'Editor',
+      };
+    }
+  );
+
+  const mobileUserData: IMobileUserData[] | undefined = userData?.map(
+    (item) => {
+      return {
+        id: {
+          header: 'ID',
+          value: (
+            <Text color={'yellowBg'} title={item.id}>
+              {' '}
+              {`${item.id.slice(0, 6)}...`}{' '}
+            </Text>
+          ),
+        },
+        status: {
+          header: 'Status',
+          value: (
+            <Switch
+              size={{ base: 'sm', lg: 'lg' }}
+              variant={'boxy'}
+              isChecked={item.status}
+            />
+          ),
+        },
+        username: {
+          header: 'Username',
+          value: item.userName,
+        },
+        agentName: {
+          header: 'Agent Name',
+          value: item.agentName,
+        },
+        balance: {
+          header: 'Balance',
+          value: item.balance,
+        },
+        role: {
+          header: 'Role',
+          value: item.role,
+        },
+        login_times: {
+          header: 'Login Times',
+          value: item.loginTimes,
+        },
+        last_login_times: {
+          header: 'Last Login Time',
+          value: dateFormatter(Number(item.lastLoginTime)),
+        },
+        last_login_ip: {
+          header: 'Last Login IP',
+          value: item.lastLogonAddress,
+        },
+        operation: {
+          header: 'Operation',
+          value: (
+            <EditorMenu
+              onOpenRecharge={onOpenRecharge}
+              selectedValue={item.operation}
+            />
+          ),
+        },
+      };
+    }
+  );
   return (
     <VStack gap={0} w={'100%'} h={'100vh'} justify={'space-between'}>
       <Alert size="md" margin={'15px'}>
@@ -258,11 +316,26 @@ export default function GameUser() {
           </Stack>
         </HStack>
         <Box w={'100%'}>
-          <DataTable columns={columns} data={data} />
+          {isLoading ? (
+            <Flex w={'100%'} justify={'center'} align={'center'} h={'400px'}>
+              <Spinner />
+            </Flex>
+          ) : (
+            userData &&
+            mobileUserData && (
+              <DataTable
+                columns={columns}
+                // data={data}
+                userData={userData}
+                mobileData={mobileUserData}
+              />
+            )
+          )}
         </Box>
       </VStack>
-      <Footer />
-      <AddUserModal isOpen={isOpen} onClose={onClose} />
+      <Footer page={page} setpage={setpage} />
+      <AddUserModal isOpen={isOpenAddUser} onClose={onCloseAddUser} />
+      <RechargeModal isOpen={isOpenRecharge} onClose={onCloseRecharge} />
     </VStack>
   );
 }

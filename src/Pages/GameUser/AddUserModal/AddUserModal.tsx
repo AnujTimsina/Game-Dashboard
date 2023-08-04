@@ -41,16 +41,16 @@ export default function AddUserModal({ isOpen, onClose }: IModalProps) {
   const [redeemAuthorized, setredeemAuthorized] = useState('1');
   const [activeStatus, setactiveStatus] = useState('2');
 
-  const users = useFetch('http://localhost:3000/v1/users?limit=10&page=1');
+  // const users = useFetch('http://localhost:3000/v1/users?limit=10&page=1');
 
-  console.log(users, 'asdfads');
+  // console.log(users, 'asdfads');
 
   const validateSchema = Yup.object().shape({
     agentName: Yup.string()
       .required('This field is required')
       .min(8, 'Pasword must be 8 or more characters'),
     loginAccount: Yup.string().notRequired(),
-    contactNumber: Yup.string().required('This field is required'),
+    // contactNumber: Yup.string().required('This field is required'),
     password: Yup.string()
       .required('This field is required')
       .min(8, 'Pasword must be 8 or more characters')
@@ -78,11 +78,15 @@ export default function AddUserModal({ isOpen, onClose }: IModalProps) {
     any
   >(`${BACKEND_URL}${apiRoutes.addUser}`);
 
-  const addUser = async () => {
+  const addUser = async (
+    usermame: string,
+    agentName: string,
+    password: string
+  ) => {
     const data = {
-      userName: 'test 421',
-      agentName: 'testAgent',
-      password: 'password1',
+      userName: usermame,
+      agentName: agentName,
+      password: password,
     };
     const result = await createUserMutation.mutateAsync(data);
     console.log(result, 'result');
@@ -96,8 +100,6 @@ export default function AddUserModal({ isOpen, onClose }: IModalProps) {
       position: 'top',
     });
   };
-
-  // console.log(createUserMutation.error);
 
   return (
     <Modal
@@ -116,11 +118,13 @@ export default function AddUserModal({ isOpen, onClose }: IModalProps) {
             password: '',
             confirmPassword: '',
           }}
-          // validationSchema={validateSchema}
+          validationSchema={validateSchema}
           onSubmit={async (values) => {
-            // await sleep(5000);
-            await addUser();
-            // alert(JSON.stringify(values, null, 2));
+            await addUser(
+              values.loginAccount,
+              values.agentName,
+              values.password
+            );
           }}
         >
           {(formik) => (
@@ -192,7 +196,7 @@ export default function AddUserModal({ isOpen, onClose }: IModalProps) {
                           </Text>
                         )}
                       </FormControl>
-                      <FormControl isRequired>
+                      <FormControl>
                         <FormLabel
                           htmlFor="contactNumber"
                           fontFamily={'Open Sans'}
@@ -200,7 +204,7 @@ export default function AddUserModal({ isOpen, onClose }: IModalProps) {
                           fontSize="0.875rem"
                           fontWeight=" 600"
                         >
-                          Contact Number
+                          Contact
                         </FormLabel>
                         <Input
                           id="contactNumber"

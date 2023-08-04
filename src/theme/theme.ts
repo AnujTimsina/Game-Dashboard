@@ -4,9 +4,6 @@ import Alert from './Alert';
 import Radio from './Radio';
 import Switch from './Switch';
 const config = {
-  initialColorMode: 'light',
-  useSystemColorMode: false,
-
   colors: {
     primary: '#111',
     secondary: 'linear-gradient(180deg, #181A29 0%, #1D2331 100%)',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   AlertTitle,
@@ -15,6 +15,8 @@ import {
   Text,
   VStack,
   useBreakpointValue,
+  Flex,
+  Spinner,
 } from '@chakra-ui/react';
 import {
   AddUser,
@@ -25,129 +27,84 @@ import {
 import Footer from 'src/Pages/ProfitReport/Footer';
 import { createColumnHelper } from '@tanstack/react-table';
 import { ChevronDownIcon } from '@chakra-ui/icons';
+import { useGetUserTransactions } from 'src/api/user';
+import { RechargeTable } from './RechargeTable';
+import { IMobileTransaction, Transaction } from 'src/interfaces/transaction';
 
 export default function RechargeRecord() {
-  type GameData = {
-    id: JSX.Element;
-    status: JSX.Element;
-    username: string;
-    nickname: string;
-    balance: number;
-    create_time: string;
-    login_times: number;
-    last_login_times: string;
-    last_login_ip: string;
-    operation: JSX.Element;
-  };
-
-  const data: GameData[] = [
-    {
-      id: <Text color={'yellowBg'}> 200</Text>,
-      status: <Switch size={{ base: 'sm', lg: 'lg' }} variant={'boxy'} />,
-      username: 'john',
-      nickname: 'john nick',
-      balance: 300,
-      create_time: '29-20-2023',
-      login_times: 5,
-      last_login_times: '29-20-2023',
-      last_login_ip: '69.136.237.40',
-      operation: (
-        <Menu size={{ base: 'sm', lg: 'lg' }}>
-          <MenuButton
-            as={Button}
-            rightIcon={<ChevronDownIcon />}
-            bg={'yellowBg'}
-            color={'black'}
-          >
-            Editor
-          </MenuButton>
-          <MenuList>
-            <MenuItem>Download</MenuItem>
-          </MenuList>
-        </Menu>
-      ),
-    },
-    {
-      id: <Text color={'yellowBg'}> 200</Text>,
-      status: <Switch size={{ base: 'sm', lg: 'lg' }} variant={'boxy'} />,
-      username: 'john',
-      nickname: 'john nick',
-      balance: 300,
-      create_time: '29-20-2023',
-      login_times: 5,
-      last_login_times: '29-20-2023',
-      last_login_ip: '69.136.237.40',
-      operation: (
-        <Menu size={{ base: 'sm', lg: 'lg' }}>
-          <MenuButton
-            as={Button}
-            rightIcon={<ChevronDownIcon />}
-            bg={'yellowBg'}
-            color={'black'}
-          >
-            Editor
-          </MenuButton>
-          <MenuList>
-            <MenuItem>Download</MenuItem>
-          </MenuList>
-        </Menu>
-      ),
-    },
-  ];
-
-  const columnHelper = createColumnHelper<GameData>();
+  const columnHelper = createColumnHelper<Transaction>();
 
   const columns = [
     columnHelper.accessor('id', {
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <Text color={'yellowBg'} title={info.getValue()}>
+          {`${info.getValue().slice(0, 16)}...`}{' '}
+        </Text>
+      ),
       header: 'ID',
       meta: {
         isNumeric: true,
       },
     }),
-    columnHelper.accessor('status', {
+    columnHelper.accessor('amount', {
       cell: (info) => info.getValue(),
-      header: 'Status',
+      header: 'Amount',
     }),
-    columnHelper.accessor('username', {
+    columnHelper.accessor('actionTo.agentName', {
       cell: (info) => info.getValue(),
-      header: 'Username',
+      header: 'Receiver Agent Name',
     }),
-    columnHelper.accessor('nickname', {
+    columnHelper.accessor('actionTo.balance', {
       cell: (info) => info.getValue(),
-      header: 'Nickname',
+      header: 'Receiver Balance',
     }),
-    columnHelper.accessor('balance', {
+    columnHelper.accessor('actionTo.role', {
       cell: (info) => info.getValue(),
-      header: 'Balance',
-      meta: {
-        isNumeric: true,
-      },
-    }),
-    columnHelper.accessor('create_time', {
-      cell: (info) => info.getValue(),
-      header: 'Create Time',
-    }),
-    columnHelper.accessor('login_times', {
-      cell: (info) => info.getValue(),
-      header: 'Login Times',
-      meta: {
-        isNumeric: true,
-      },
-    }),
-    columnHelper.accessor('last_login_times', {
-      cell: (info) => info.getValue(),
-      header: 'Last Login Times',
-    }),
-    columnHelper.accessor('last_login_ip', {
-      cell: (info) => info.getValue(),
-      header: 'Last Login IP',
-    }),
-    columnHelper.accessor('operation', {
-      cell: (info) => info.getValue(),
-      header: 'Operation',
+      header: 'Receiver Role',
     }),
   ];
+  const [page, setpage] = useState(1);
+
+  const {
+    data: transactions,
+    isLoading,
+    isFetching,
+  } = useGetUserTransactions('64c498f30e784498f4dcf778', page);
+
+  // console.log(list);
+
+  const mobileTransactions: IMobileTransaction[] | undefined =
+    transactions?.results.map((item) => {
+      return {
+        id: {
+          header: 'ID',
+          value: (
+            <Text color={'yellowBg'} title={item.id}>
+              {' '}
+              {`${item.id.slice(0, 6)}...`}{' '}
+            </Text>
+          ),
+        },
+
+        amount: {
+          header: 'Amount',
+          value: item.amount,
+        },
+        receiver_agent_name: {
+          header: 'Receiver Agent Name',
+          value: item.actionTo.agentName,
+        },
+        receiver_balance: {
+          header: 'Receiver Balance',
+          value: item.actionTo.balance,
+        },
+        receiver_role: {
+          header: 'Receiver Role',
+          value: item.actionTo.role,
+        },
+      };
+    });
+
   return (
     <VStack gap={0} w={'100%'} h={'100vh'} justify={'space-between'}>
       <VStack
@@ -247,6 +204,10 @@ export default function RechargeRecord() {
               p={{ base: '10px', md: '10px', lg: '10px' }}
               borderRadius={'10px'}
               cursor={'pointer'}
+              onClick={async () => {
+                // const result = await fetchNextPage();
+                // console.log('clicked', result);
+              }}
             >
               <SearchIcon2 />
             </Box>
@@ -262,10 +223,24 @@ export default function RechargeRecord() {
           </Stack>
         </Stack>
         <Box w={'100%'}>
-          {/* <DataTable columns={columns} data={data} /> */}
+          {isLoading ? (
+            <Flex w={'100%'} justify={'center'} align={'center'} h={'400px'}>
+              <Spinner />
+            </Flex>
+          ) : (
+            transactions &&
+            mobileTransactions && (
+              <RechargeTable
+                columns={columns}
+                // data={data}
+                transactions={transactions.results}
+                mobileData={mobileTransactions}
+              />
+            )
+          )}
         </Box>
       </VStack>
-      <Footer />
+      <Footer page={page} setpage={setpage} />
     </VStack>
   );
 }

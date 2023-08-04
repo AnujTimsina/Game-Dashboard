@@ -181,8 +181,8 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </Text>
       </Box>
       <VStack mt={'35px'} gap={'16px'}>
-        {LinkItems.map((link) => (
-          <NavItem key={link.name} route={link.route} subMenu={link.subMenu}>
+        {LinkItems.map((link, id) => (
+          <NavItem key={id} route={link.route} subMenu={link.subMenu}>
             {link.name}
           </NavItem>
         ))}
@@ -235,6 +235,7 @@ const NavItem = ({ route, children, subMenu }: NavItemProps) => {
           openSubMenu &&
           subMenu.map((item, id) => (
             <Link
+              key={id}
               ml={'30px '}
               as={NavLink}
               // href={route}

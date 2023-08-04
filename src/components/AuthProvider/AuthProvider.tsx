@@ -27,6 +27,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (token) {
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
       localStorage.setItem('token', token);
+      console.log(token, 'token');
     } else {
       delete axios.defaults.headers.common['Authorization'];
       localStorage.removeItem('token');

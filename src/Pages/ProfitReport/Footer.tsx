@@ -8,7 +8,13 @@ import {
   PageUp,
 } from 'src/assets/images';
 
-export default function Footer() {
+export default function Footer({
+  setpage,
+  page,
+}: {
+  page: number;
+  setpage: React.Dispatch<React.SetStateAction<number>>;
+}) {
   return (
     <HStack
       w={'100%'}
@@ -59,13 +65,17 @@ export default function Footer() {
         </VStack>
       </HStack>
       <HStack order={{ base: '3', lg: '1' }}>
-        <DropdownBlackIcon style={{ transform: 'rotate(90deg)' }} />
+        <Box onClick={() => setpage((prev) => prev - 1)}>
+          <DropdownBlackIcon style={{ transform: 'rotate(90deg)' }} />
+        </Box>
         <Box bg={'cardBg2'} p={{ base: '7px 10px' }} borderRadius={'5px'}>
           <Text color={'white'} fontWeight={'600'}>
-            1
+            {page}
           </Text>
         </Box>
-        <DropdownBlackIcon style={{ transform: 'rotate(-90deg)' }} />
+        <Box onClick={() => setpage((prev) => prev + 1)}>
+          <DropdownBlackIcon style={{ transform: 'rotate(-90deg)' }} />
+        </Box>
       </HStack>
     </HStack>
   );

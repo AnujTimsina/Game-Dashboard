@@ -7,7 +7,10 @@ import {
 } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
-import { GetInfinitePagesInterface } from 'src/interfaces';
+import {
+  BackendQueryResponse,
+  GetInfinitePagesInterface,
+} from 'src/interfaces';
 import { api } from './api';
 import { QueryFunctionContext } from 'react-query';
 
@@ -31,11 +34,15 @@ export const useLoadMore = <T>(url: string | null, params?: object) => {
     QueryKeyT
   >(
     [url!, params],
-    ({ queryKey, pageParam = 1 }) => fetcher({ queryKey, pageParam, meta: {} }),
+
+    ({ queryKey, pageParam = 1, meta }) =>
+      fetcher({ queryKey, pageParam, meta }),
     {
-      getPreviousPageParam: (firstPage) => firstPage.previousId ?? false,
       getNextPageParam: (lastPage) => {
-        return lastPage.nextId ?? false;
+        return lastPage.page < lastPage.totalPages ? lastPage.page + 1 : false;
+      },
+      getPreviousPageParam: (firstPage) => {
+        return firstPage.page > 1 ? firstPage.page - 1 : false;
       },
     }
   );
@@ -53,7 +60,7 @@ export const usePrefetch = <T>(url: string | null, params?: object) => {
 
     queryClient.prefetchQuery<T, Error, T, QueryKeyT>(
       [url!, params],
-      ({ queryKey }) => fetcher({ queryKey, meta: {} })
+      ({ queryKey, meta }) => fetcher({ queryKey, meta })
     );
   };
 };
@@ -61,16 +68,22 @@ export const usePrefetch = <T>(url: string | null, params?: object) => {
 export const useFetch = <T>(
   url: string | null,
   params?: object,
-  config?: UseQueryOptions<T, Error, T, QueryKeyT>
+  config?: UseQueryOptions<
+    BackendQueryResponse<T>,
+    Error,
+    BackendQueryResponse<T>,
+    QueryKeyT
+  >
 ) => {
-  const context = useQuery<T, Error, T, QueryKeyT>(
-    [url!, params],
-    ({ queryKey }) => fetcher({ queryKey, meta: {} }),
-    {
-      enabled: !!url,
-      ...config,
-    }
-  );
+  const context = useQuery<
+    BackendQueryResponse<T>,
+    Error,
+    BackendQueryResponse<T>,
+    QueryKeyT
+  >([url!, params], ({ queryKey, meta }) => fetcher({ queryKey, meta }), {
+    enabled: !!url,
+    ...config,
+  });
 
   return context;
 };
