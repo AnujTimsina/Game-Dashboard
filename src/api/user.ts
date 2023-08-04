@@ -6,14 +6,14 @@ import { useFetch, useLoadMore } from 'src/utils/reactQuery';
 
 export const useGetSubUsers = (id: string, page: number) =>
   useFetch<IUser[]>(`${BACKEND_URL}/users/${id}/subUsers`, {
-    limit: 10,
+    limit: 6,
     page: page,
   });
 
 export const useGetUserTransactions = (id: string, page: number) =>
   useFetch<Transaction[]>(`${BACKEND_URL}/transactions/${id}`, {
     type: 1,
-    limit: 10,
+    limit: 8,
     page: page,
     populate: 'actionBy,actionTo',
   });

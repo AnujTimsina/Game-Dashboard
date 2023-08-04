@@ -34,8 +34,8 @@ interface IModalProps {
 }
 
 export default function AddUserModal({ isOpen, onClose }: IModalProps) {
-  // const toast = useToast()
-  const { ToastContainer, toast } = createStandaloneToast();
+  const toast = useToast();
+  // const { ToastContainer, toast } = createStandaloneToast();
 
   const [rechargeAuthorized, setrechargeAuthorized] = useState('1');
   const [redeemAuthorized, setredeemAuthorized] = useState('1');
@@ -46,9 +46,7 @@ export default function AddUserModal({ isOpen, onClose }: IModalProps) {
   // console.log(users, 'asdfads');
 
   const validateSchema = Yup.object().shape({
-    agentName: Yup.string()
-      .required('This field is required')
-      .min(8, 'Pasword must be 8 or more characters'),
+    agentName: Yup.string().required('This field is required'),
     loginAccount: Yup.string().notRequired(),
     // contactNumber: Yup.string().required('This field is required'),
     password: Yup.string()

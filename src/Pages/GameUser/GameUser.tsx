@@ -32,6 +32,8 @@ import EditorMenu from './EditorMenu/EditorMenu';
 import { IMobileUserData } from 'src/interfaces';
 import { dateFormatter } from 'src/utils/dateFormatter';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/store';
 
 export type GameData = {
   id: JSX.Element;
@@ -47,11 +49,8 @@ export type GameData = {
 };
 
 export default function GameUser() {
-  const {
-    isOpen: isOpenRecharge,
-    onClose: onCloseRecharge,
-    onOpen: onOpenRecharge,
-  } = useDisclosure();
+  const { id: userId } = useSelector((state: RootState) => state.gameUser);
+
   const {
     isOpen: isOpenAddUser,
     onClose: onCloseAddUser,
@@ -60,13 +59,7 @@ export default function GameUser() {
 
   const [page, setpage] = useState(1);
 
-  const {
-    data: gameUsers,
-    isLoading,
-    // fetchNextPage,
-    // hasNextPage,
-    // isFetchingNextPage,
-  } = useGetSubUsers('64c498f30e784498f4dcf778', page);
+  const { data: gameUsers, isLoading } = useGetSubUsers(userId, page);
 
   const columnHelper = createColumnHelper<IUserFormatted>();
 
@@ -123,12 +116,14 @@ export default function GameUser() {
       header: 'Last Login IP',
     }),
     columnHelper.accessor('operation', {
-      cell: (info) => (
-        <EditorMenu
-          onOpenRecharge={onOpenRecharge}
-          selectedValue={info.getValue()}
-        />
-      ),
+      cell: (info) => {
+        return (
+          <EditorMenu
+            selectedValue={info.getValue()}
+            user={info.row.original}
+          />
+        );
+      },
       header: 'Operation',
     }),
   ];
@@ -204,12 +199,7 @@ export default function GameUser() {
         },
         operation: {
           header: 'Operation',
-          value: (
-            <EditorMenu
-              onOpenRecharge={onOpenRecharge}
-              selectedValue={item.operation}
-            />
-          ),
+          value: <EditorMenu selectedValue={item.operation} user={item} />,
         },
       };
     }
@@ -335,7 +325,6 @@ export default function GameUser() {
       </VStack>
       <Footer page={page} setpage={setpage} />
       <AddUserModal isOpen={isOpenAddUser} onClose={onCloseAddUser} />
-      <RechargeModal isOpen={isOpenRecharge} onClose={onCloseRecharge} />
     </VStack>
   );
 }

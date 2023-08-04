@@ -269,8 +269,6 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
     dispatch(resetUser());
   };
 
-  console.log(gameUser, 'gameuser');
-
   return (
     <Flex>
       <VStack

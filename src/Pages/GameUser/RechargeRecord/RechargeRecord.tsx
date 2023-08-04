@@ -30,8 +30,12 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useGetUserTransactions } from 'src/api/user';
 import { RechargeTable } from './RechargeTable';
 import { IMobileTransaction, Transaction } from 'src/interfaces/transaction';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/store';
 
 export default function RechargeRecord() {
+  const { id: userId } = useSelector((state: RootState) => state.gameUser);
+
   const columnHelper = createColumnHelper<Transaction>();
 
   const columns = [
@@ -54,9 +58,13 @@ export default function RechargeRecord() {
       cell: (info) => info.getValue(),
       header: 'Receiver Agent Name',
     }),
-    columnHelper.accessor('actionTo.balance', {
+    columnHelper.accessor('actionToBeforeBalance', {
       cell: (info) => info.getValue(),
-      header: 'Receiver Balance',
+      header: 'Receiver Balance Before',
+    }),
+    columnHelper.accessor('actionToAfterBalance', {
+      cell: (info) => info.getValue(),
+      header: 'Receiver Balance After',
     }),
     columnHelper.accessor('actionTo.role', {
       cell: (info) => info.getValue(),
@@ -69,7 +77,7 @@ export default function RechargeRecord() {
     data: transactions,
     isLoading,
     isFetching,
-  } = useGetUserTransactions('64c498f30e784498f4dcf778', page);
+  } = useGetUserTransactions(userId, page);
 
   // console.log(list);
 

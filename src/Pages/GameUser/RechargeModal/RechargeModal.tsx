@@ -30,15 +30,17 @@ import { createStandaloneToast } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { TRANSACTION_TYPES } from 'src/interfaces';
+import { IUserFormatted } from 'src/interfaces/user';
 
 interface IModalProps {
   isOpen: boolean;
   onClose: () => void;
+  user: IUserFormatted;
 }
 
-export default function RechargeModal({ isOpen, onClose }: IModalProps) {
-  // const toast = useToast()
-  const { ToastContainer, toast } = createStandaloneToast();
+export default function RechargeModal({ isOpen, onClose, user }: IModalProps) {
+  const toast = useToast();
+  // const { ToastContainer, toast } = createStandaloneToast();
 
   const { userName } = useSelector((state: RootState) => state.gameUser);
 
@@ -52,6 +54,7 @@ export default function RechargeModal({ isOpen, onClose }: IModalProps) {
       ),
   });
 
+  console.log(user, 'user');
   const createRechargeTransactionMutation = usePost<
     {
       actionBy: string;
@@ -65,7 +68,7 @@ export default function RechargeModal({ isOpen, onClose }: IModalProps) {
   const rechargeUser = async (amount: string) => {
     const data = {
       actionBy: userName,
-      actionTo: 'testusername1',
+      actionTo: user.userName,
       amount: amount,
       type: TRANSACTION_TYPES.RECHARGE,
     };
@@ -80,6 +83,10 @@ export default function RechargeModal({ isOpen, onClose }: IModalProps) {
       duration: 6000,
       isClosable: true,
       position: 'top',
+      // variant={}
+      // variant={""}
+      // styleConfig={{te}}
+      // colorScheme={{"whiteAlpha"}}
     });
   };
 
@@ -89,8 +96,8 @@ export default function RechargeModal({ isOpen, onClose }: IModalProps) {
       <ModalContent bg={'modalBg'} color={'modalText'} borderRadius={'10px'}>
         <Formik
           initialValues={{
-            account: 'john123',
-            customerBalance: '0',
+            account: user.userName,
+            customerBalance: user.balance,
             availableBalance: '0',
             rechargeBalance: '',
           }}

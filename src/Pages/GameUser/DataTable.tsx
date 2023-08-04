@@ -103,6 +103,13 @@ export function DataTable<Data extends object>({
                   // console.log('row', cell.column.columnDef.header);
                   // see https://tanstack.com/table/v8/docs/api/core/column-def#meta to type this correctly
                   const meta: any = cell.column.columnDef.meta;
+
+                  // console.log(
+                  //   cell.id,
+                  //   '*****',
+                  //   cell.column.columnDef.cell,
+                  //   'celllll'
+                  // );
                   return (
                     <Td
                       key={cell.id}
