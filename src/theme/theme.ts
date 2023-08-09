@@ -14,10 +14,15 @@ const config = {
     modalText: '#1E1E1E',
     blueBg: '#409EFF',
     errorText: 'rgba(255, 58, 58, 0.75)',
+    signinBg:
+      'linear-gradient(135deg, rgba(239, 239, 239, 0.60) 0%, rgba(239, 239, 239, 0.10) 100%)',
+    btn: 'linear-gradient(180deg, #FFDA3A 0%, #CD3214 100%)',
+    inputGlassBg:
+      'linear-gradient(133deg, rgba(255, 255, 255, 0.60) 0%, rgba(255, 255, 255, 0.30) 100%)',
+    placeholder: '#181A29',
 
     yellowBg: '#FFDA3A',
     crossIcon: '#FEEAB5',
-    btn: 'linear-gradient(180deg, #FFDA3A 0%, #CD3214 100%)',
     miniCard: '#3C415A',
     searchBg: '#1D2331',
     textMain: 'rgba(255, 255, 255, 0.55)',

@@ -83,10 +83,6 @@ export default function RechargeModal({ isOpen, onClose, user }: IModalProps) {
       duration: 6000,
       isClosable: true,
       position: 'top',
-      // variant={}
-      // variant={""}
-      // styleConfig={{te}}
-      // colorScheme={{"whiteAlpha"}}
     });
   };
 

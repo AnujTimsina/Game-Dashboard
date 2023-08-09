@@ -21,7 +21,12 @@ export { ReactComponent as DrawerIcon } from './drawer_menu.svg';
 export { ReactComponent as PageUp } from './page_up.svg';
 export { ReactComponent as PageDown } from './page_down.svg';
 export { ReactComponent as AddUser } from './add-user.svg';
+export { ReactComponent as PasswordIcon } from './password.svg';
+export { ReactComponent as UsernameIcon } from './user.svg';
 
 //png
 import ProfileLogo from './profile.png';
-export { ProfileLogo };
+import MainLogo from './mainIcon.png';
+import LoginBg from './loginMainBg.png';
+
+export { ProfileLogo, MainLogo, LoginBg };

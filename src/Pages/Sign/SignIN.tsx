@@ -4,11 +4,15 @@ import {
   Checkbox,
   Container,
   Divider,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
   HStack,
+  Image,
   Input,
+  InputGroup,
+  InputLeftElement,
   Link,
   Stack,
   Text,
@@ -28,6 +32,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateUser } from 'src/store/user/slices/userSlice';
 import { RootState } from 'src/store';
 import { IUser } from 'src/interfaces/user';
+import { LoginBg, MainLogo, UsernameIcon } from 'src/assets/images';
 
 const SignIN = () => {
   // const { login } = useUtils();
@@ -70,73 +75,72 @@ const SignIN = () => {
       w={'100%'}
       px={{ base: '0', sm: '8' }}
       color={'white'}
-      bg={'cardBg'}
       p={'1rem'}
       h={'100vh'}
       justify={'center'}
+      bg={`url(${LoginBg})`}
+      bgSize="cover"
+      bgRepeat="repeat"
+      backgroundPosition={'center'}
     >
-      {/* <VStack > */}
-
       <Stack
-        borderRadius={'10px'}
-        spacing="8"
+        borderRadius={'30px'}
+        spacing="3"
         boxShadow={'rgba(0, 0, 0, 0.35) 0px 5px 15px'}
-        p={'1rem'}
+        px={'1rem'}
+        py={'4rem'}
+        background="signinBg"
+        backdropFilter="blur(12px)"
       >
-        <Stack spacing="6">
-          {/* <Logo /> */}
-          <Stack spacing={{ base: '2', md: '3' }} textAlign="center">
-            <Heading size={{ base: 'xs', md: 'sm' }}>
-              Log in to your account
-            </Heading>
-            <Text color="fg.muted">
-              Don't have an account? <Link href="#">Sign up</Link>
-            </Text>
-          </Stack>
-        </Stack>
+        <Flex w={'400px'} align={'center'} justify={'center'}>
+          <Image src={MainLogo} w={'300px'} />
+        </Flex>
         <Box
-          py={{ base: '0', sm: '8' }}
           px={{ base: '4', sm: '10' }}
-          bg={{ base: 'transparent', sm: 'bg.surface' }}
-          // boxShadow={{ base: 'none', sm: 'md' }}
           borderRadius={{ base: 'none', sm: 'xl' }}
         >
           <Stack spacing="6">
-            <Stack spacing="5">
+            <Stack spacing="2 " color={'black'}>
               <FormControl>
-                <FormLabel htmlFor="email">Username</FormLabel>
-                <Input id="email" type="email" onChange={handleUsername} />
+                <InputGroup alignContent={'center'} height={'55px'}>
+                  <InputLeftElement pointerEvents="none">
+                    <UsernameIcon width={'28px'} height={'28px'} />
+                  </InputLeftElement>
+                  <Input
+                    id="email"
+                    type="text"
+                    onChange={handleUsername}
+                    border-radius="10px"
+                    background="inputGlassBg"
+                    box-shadow="0px 3px 10px 0px rgba(0, 0, 0, 0.35)"
+                    placeholder={'Username'}
+                    color={'placeholder'}
+                    fontWeight={'600'}
+                    fontSize={'1rem'}
+                    _placeholder={{
+                      color: 'placeholder',
+                      fontWeight: '600',
+                      fontSize: '1rem',
+                    }}
+                  />
+                </InputGroup>
               </FormControl>
               <PasswordField onChange={handlePassword} />
             </Stack>
-            <HStack justify="space-between">
-              <Checkbox defaultChecked>Remember me</Checkbox>
-              <Button variant="text" size="sm">
-                Forgot password?
-              </Button>
-            </HStack>
-            <Stack spacing="6">
+
+            <Stack align={'center'} pt={'2rem'}>
               <Button
                 w={'100%'}
-                // maxWidth="180px"
+                maxW={'200px'}
                 color="#FFF"
-                borderRadius="33px"
-                border="1px solid #C11506, #FE3A3A"
-                background=" radial-gradient(122.87% 59.62% at 50.00% 50.00%, #BF4922 0%, #9D1F14 100%),radial-gradient(155.82% 49.86% at 50.14% 50.88%, rgba(193, 21, 6, 0.15) 19.79%, rgba(254, 58, 58, 0.15) 100%)            "
-                // backdropilter: blur(22.5px);
+                borderRadius="10px"
                 onClick={handleLogin}
                 isLoading={loginMutation.isLoading}
+                background={'btn'}
+                box-shadow="0px 3px 10px 0px rgba(0, 0, 0, 0.35)"
               >
                 Sign In
               </Button>
-              <HStack>
-                <Divider />
-                <Text textStyle="sm" whiteSpace="nowrap" color="fg.muted">
-                  or continue with
-                </Text>
-                <Divider />
-              </HStack>
-              <OAuthButtonGroup />
             </Stack>
           </Stack>
         </Box>

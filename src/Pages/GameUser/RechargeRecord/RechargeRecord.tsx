@@ -79,8 +79,6 @@ export default function RechargeRecord() {
     isFetching,
   } = useGetUserTransactions(userId, page);
 
-  // console.log(list);
-
   const mobileTransactions: IMobileTransaction[] | undefined =
     transactions?.results.map((item) => {
       return {

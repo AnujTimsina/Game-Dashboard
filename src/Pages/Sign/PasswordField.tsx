@@ -4,6 +4,7 @@ import {
   IconButton,
   Input,
   InputGroup,
+  InputLeftElement,
   InputProps,
   InputRightElement,
   useDisclosure,
@@ -11,6 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { forwardRef, useRef } from 'react';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
+import { PasswordIcon } from 'src/assets/images';
 
 export const PasswordField = forwardRef<HTMLInputElement, InputProps>(
   (props, ref) => {
@@ -27,16 +29,19 @@ export const PasswordField = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <FormControl>
-        <FormLabel htmlFor="password">Password</FormLabel>
         <InputGroup>
           <InputRightElement>
             <IconButton
+              color={'white'}
               variant="text"
               aria-label={isOpen ? 'Mask password' : 'Reveal password'}
               icon={isOpen ? <HiEyeOff /> : <HiEye />}
               onClick={onClickReveal}
             />
           </InputRightElement>
+          <InputLeftElement pointerEvents="none">
+            <PasswordIcon width={'28px'} height={'28px'} />
+          </InputLeftElement>
           <Input
             id="password"
             ref={mergeRef}
@@ -44,6 +49,18 @@ export const PasswordField = forwardRef<HTMLInputElement, InputProps>(
             type={isOpen ? 'text' : 'password'}
             autoComplete="current-password"
             required
+            border-radius="10px"
+            background="inputGlassBg"
+            box-shadow="0px 3px 10px 0px rgba(0, 0, 0, 0.35)"
+            color={'placeholder'}
+            fontWeight={'600'}
+            fontSize={'1rem'}
+            placeholder={'Password'}
+            _placeholder={{
+              color: 'placeholder',
+              fontWeight: '600',
+              fontSize: '1rem',
+            }}
             {...props}
           />
         </InputGroup>

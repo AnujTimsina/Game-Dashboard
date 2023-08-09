@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   AlertTitle,
@@ -25,6 +25,8 @@ import {
 import Footer from 'src/Pages/ProfitReport/Footer';
 
 export default function RedeemRecord() {
+  const [page, setpage] = useState(1);
+
   return (
     <VStack gap={0} w={'100%'} h={'100vh'} justify={'space-between'}>
       <VStack
@@ -139,7 +141,7 @@ export default function RedeemRecord() {
           </Stack>
         </Stack>
       </VStack>
-      <Footer />
+      <Footer page={page} setpage={setpage} />
     </VStack>
   );
 }
