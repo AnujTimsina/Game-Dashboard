@@ -29,16 +29,22 @@ import { apiRoutes } from 'src/routes/pageRoutes';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/store';
-import { TRANSACTION_TYPES } from 'src/interfaces';
 import { IUserFormatted } from 'src/interfaces/user';
+import { TRANSACTION_TYPES } from 'src/config/constants';
 
 interface IModalProps {
   isOpen: boolean;
   onClose: () => void;
   user: IUserFormatted;
+  transactionType: TRANSACTION_TYPES;
 }
 
-export default function RechargeModal({ isOpen, onClose, user }: IModalProps) {
+export default function TransactionModal({
+  isOpen,
+  onClose,
+  user,
+  transactionType,
+}: IModalProps) {
   const toast = useToast();
   // const { ToastContainer, toast } = createStandaloneToast();
 
@@ -70,7 +76,7 @@ export default function RechargeModal({ isOpen, onClose, user }: IModalProps) {
       actionBy: userName,
       actionTo: user.userName,
       amount: amount,
-      type: TRANSACTION_TYPES.RECHARGE,
+      type: transactionType,
     };
 
     const result = await createRechargeTransactionMutation.mutateAsync(data);
@@ -109,7 +115,9 @@ export default function RechargeModal({ isOpen, onClose, user }: IModalProps) {
                 fontWeight={'700'}
                 boxShadow={'0px 4px 18px 0px rgba(0, 0, 0, 0.15)'}
               >
-                RECHARGE
+                {transactionType == TRANSACTION_TYPES.RECHARGE
+                  ? 'RECHARGE'
+                  : 'REDEEM'}
               </ModalHeader>
               <ModalBody
                 boxShadow="0px 2px 9px 0px rgba(0, 0, 0, 0.15)"
@@ -203,7 +211,9 @@ export default function RechargeModal({ isOpen, onClose, user }: IModalProps) {
                         fontSize="0.875rem"
                         fontWeight=" 600"
                       >
-                        Recharge Balance
+                        {transactionType == TRANSACTION_TYPES.RECHARGE
+                          ? 'Recharge Balance'
+                          : 'Redeem Balance'}
                       </FormLabel>
                       <Input
                         id="rechargeBalance"

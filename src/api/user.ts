@@ -10,9 +10,13 @@ export const useGetSubUsers = (id: string, page: number) =>
     page: page,
   });
 
-export const useGetUserTransactions = (id: string, page: number) =>
+export const useGetUserTransactions = (
+  id: string,
+  page: number,
+  type: number
+) =>
   useFetch<Transaction[]>(`${BACKEND_URL}/transactions/${id}`, {
-    type: 1,
+    type: type,
     limit: 8,
     page: page,
     populate: 'actionBy,actionTo',

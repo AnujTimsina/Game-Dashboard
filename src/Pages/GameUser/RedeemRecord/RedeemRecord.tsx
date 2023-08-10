@@ -15,6 +15,8 @@ import {
   Text,
   VStack,
   useBreakpointValue,
+  Flex,
+  Spinner,
 } from '@chakra-ui/react';
 import {
   AddUser,
@@ -23,9 +25,91 @@ import {
   SearchIcon2,
 } from 'src/assets/images';
 import Footer from 'src/Pages/ProfitReport/Footer';
+import { RootState } from 'src/store';
+import { useSelector } from 'react-redux';
+import { createColumnHelper } from '@tanstack/react-table';
+import { IMobileTransaction, Transaction } from 'src/interfaces/transaction';
+import { useGetUserTransactions } from 'src/api/user';
+import { TRANSACTION_TYPES } from 'src/config/constants';
+import { TransactionTable } from 'src/components/TransactionTable/TransactionTable';
 
 export default function RedeemRecord() {
+  const { id: userId } = useSelector((state: RootState) => state.gameUser);
+
+  const columnHelper = createColumnHelper<Transaction>();
+
+  const columns = [
+    columnHelper.accessor('id', {
+      cell: (info) => (
+        <Text color={'yellowBg'} title={info.getValue()}>
+          {`${info.getValue().slice(0, 16)}...`}{' '}
+        </Text>
+      ),
+      header: 'ID',
+      meta: {
+        isNumeric: true,
+      },
+    }),
+    columnHelper.accessor('amount', {
+      cell: (info) => info.getValue(),
+      header: 'Amount',
+    }),
+    columnHelper.accessor('actionTo.agentName', {
+      cell: (info) => info.getValue(),
+      header: 'Receiver Agent Name',
+    }),
+    columnHelper.accessor('actionToBeforeBalance', {
+      cell: (info) => info.getValue(),
+      header: 'Receiver Balance Before',
+    }),
+    columnHelper.accessor('actionToAfterBalance', {
+      cell: (info) => info.getValue(),
+      header: 'Receiver Balance After',
+    }),
+    columnHelper.accessor('actionTo.role', {
+      cell: (info) => info.getValue(),
+      header: 'Receiver Role',
+    }),
+  ];
   const [page, setpage] = useState(1);
+
+  const {
+    data: transactions,
+    isLoading,
+    isFetching,
+  } = useGetUserTransactions(userId, page, TRANSACTION_TYPES.REDEEM);
+
+  const mobileTransactions: IMobileTransaction[] | undefined =
+    transactions?.results.map((item) => {
+      return {
+        id: {
+          header: 'ID',
+          value: (
+            <Text color={'yellowBg'} title={item.id}>
+              {' '}
+              {`${item.id.slice(0, 6)}...`}{' '}
+            </Text>
+          ),
+        },
+
+        amount: {
+          header: 'Amount',
+          value: item.amount,
+        },
+        receiver_agent_name: {
+          header: 'Receiver Agent Name',
+          value: item.actionTo.agentName,
+        },
+        receiver_balance: {
+          header: 'Receiver Balance',
+          value: item.actionTo.balance,
+        },
+        receiver_role: {
+          header: 'Receiver Role',
+          value: item.actionTo.role,
+        },
+      };
+    });
 
   return (
     <VStack gap={0} w={'100%'} h={'100vh'} justify={'space-between'}>
@@ -140,6 +224,22 @@ export default function RedeemRecord() {
             </Box>
           </Stack>
         </Stack>
+        <Box w={'100%'}>
+          {isLoading ? (
+            <Flex w={'100%'} justify={'center'} align={'center'} h={'400px'}>
+              <Spinner />
+            </Flex>
+          ) : (
+            transactions &&
+            mobileTransactions && (
+              <TransactionTable
+                columns={columns}
+                transactions={transactions.results}
+                mobileData={mobileTransactions}
+              />
+            )
+          )}
+        </Box>
       </VStack>
       <Footer page={page} setpage={setpage} />
     </VStack>

@@ -30,19 +30,19 @@ import {
 import { DropdownBlackIcon, DropdownCloseIcon } from 'src/assets/images';
 import { IMobileTransaction, Transaction } from 'src/interfaces/transaction';
 
-export type RechargeTableProps<Transaction extends object> = {
+export type TransactionTableProps<Transaction extends object> = {
   // data: Transaction[];
   columns: ColumnDef<Transaction, any>[];
   transactions: Transaction[];
   mobileData: IMobileTransaction[];
 };
 
-export function RechargeTable<Data extends object>({
+export function TransactionTable<Data extends object>({
   // data,
   columns,
   transactions: data,
   mobileData,
-}: RechargeTableProps<Transaction>) {
+}: TransactionTableProps<Transaction>) {
   const [showDetails, setShowDetails] = React.useState(data.map(() => false));
 
   const [sorting, setSorting] = React.useState<SortingState>([]);

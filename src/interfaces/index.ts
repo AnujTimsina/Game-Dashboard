@@ -8,11 +8,6 @@ export interface GetInfinitePagesInterface<T> {
   totalResults: number;
 }
 
-export enum TRANSACTION_TYPES {
-  RECHARGE = 1,
-  REDEEM = 2,
-}
-
 export interface IMobileUserData {
   id: { header: 'ID'; value: any };
   status: { header: 'Status'; value: any };

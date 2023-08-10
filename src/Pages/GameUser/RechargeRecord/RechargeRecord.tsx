@@ -28,10 +28,11 @@ import Footer from 'src/Pages/ProfitReport/Footer';
 import { createColumnHelper } from '@tanstack/react-table';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useGetUserTransactions } from 'src/api/user';
-import { RechargeTable } from './RechargeTable';
 import { IMobileTransaction, Transaction } from 'src/interfaces/transaction';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/store';
+import { TRANSACTION_TYPES } from 'src/config/constants';
+import { TransactionTable } from 'src/components/TransactionTable/TransactionTable';
 
 export default function RechargeRecord() {
   const { id: userId } = useSelector((state: RootState) => state.gameUser);
@@ -77,7 +78,7 @@ export default function RechargeRecord() {
     data: transactions,
     isLoading,
     isFetching,
-  } = useGetUserTransactions(userId, page);
+  } = useGetUserTransactions(userId, page, TRANSACTION_TYPES.RECHARGE);
 
   const mobileTransactions: IMobileTransaction[] | undefined =
     transactions?.results.map((item) => {
@@ -236,9 +237,8 @@ export default function RechargeRecord() {
           ) : (
             transactions &&
             mobileTransactions && (
-              <RechargeTable
+              <TransactionTable
                 columns={columns}
-                // data={data}
                 transactions={transactions.results}
                 mobileData={mobileTransactions}
               />

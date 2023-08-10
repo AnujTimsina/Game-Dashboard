@@ -25,7 +25,7 @@ import { DataTable } from './DataTable';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import VerticalTable from './MobileDataTable';
 import AddUserModal from './AddUserModal/AddUserModal';
-import RechargeModal from './RechargeModal/RechargeModal';
+import RechargeModal from '../../components/TransactionModal/TransactionModal';
 import { useGetSubUsers } from 'src/api/user';
 import { IUser, IUserFormatted } from 'src/interfaces/user';
 import EditorMenu from './EditorMenu/EditorMenu';

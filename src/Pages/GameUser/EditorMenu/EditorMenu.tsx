@@ -1,25 +1,16 @@
-import { useState } from 'react';
+import { ChevronDownIcon } from '@chakra-ui/icons';
 import {
-  Alert,
-  AlertTitle,
-  Box,
   Button,
-  HStack,
-  Input,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Stack,
-  Switch,
-  Text,
-  VStack,
-  useBreakpointValue,
   useDisclosure,
 } from '@chakra-ui/react';
-import { ChevronDownIcon } from '@chakra-ui/icons';
+import { useState } from 'react';
+import TransactionModal from 'src/components/TransactionModal/TransactionModal';
+import { TRANSACTION_TYPES } from 'src/config/constants';
 import { IUserFormatted } from 'src/interfaces/user';
-import RechargeModal from '../RechargeModal/RechargeModal';
 export default function EditorMenu({
   selectedValue,
   user,
@@ -34,11 +25,24 @@ export default function EditorMenu({
   } = useDisclosure();
 
   const [selectedUser, setSelectedUser] = useState<IUserFormatted | null>(null);
+  const [transactionType, settransactionType] =
+    useState<TRANSACTION_TYPES | null>(null);
 
-  const rechargeHandler = () => {
+  const modalHandler = () => {
     setSelectedUser(user);
     onOpenRecharge();
   };
+
+  const rechargeHandler = () => {
+    settransactionType(TRANSACTION_TYPES.RECHARGE);
+    modalHandler();
+  };
+
+  const redeemHandler = () => {
+    settransactionType(TRANSACTION_TYPES.REDEEM);
+    modalHandler();
+  };
+
   return (
     <>
       <Menu>
@@ -55,6 +59,7 @@ export default function EditorMenu({
           <MenuItem
             _hover={{ bg: 'cardBg', color: 'white' }}
             borderRadius={'10px'}
+            onClick={redeemHandler}
           >
             Redeem
           </MenuItem>
@@ -79,11 +84,12 @@ export default function EditorMenu({
           </MenuItem>
         </MenuList>
       </Menu>
-      {selectedUser && (
-        <RechargeModal
+      {selectedUser && transactionType && (
+        <TransactionModal
           isOpen={isOpenRecharge}
           onClose={onCloseRecharge}
           user={selectedUser}
+          transactionType={transactionType}
         />
       )}
     </>
