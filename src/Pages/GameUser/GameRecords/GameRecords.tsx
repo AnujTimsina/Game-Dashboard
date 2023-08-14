@@ -1,9 +1,6 @@
-import React from 'react';
+import { useState } from 'react';
 import {
-  Alert,
-  AlertTitle,
   Box,
-  Button,
   HStack,
   Input,
   Menu,
@@ -11,20 +8,15 @@ import {
   MenuItem,
   MenuList,
   Stack,
-  Switch,
   Text,
   VStack,
-  useBreakpointValue,
 } from '@chakra-ui/react';
-import {
-  AddUser,
-  DropdownIcon,
-  ResetIcon,
-  SearchIcon2,
-} from 'src/assets/images';
+import { DropdownIcon, ResetIcon, SearchIcon2 } from 'src/assets/images';
 import Footer from 'src/Pages/ProfitReport/Footer';
 
 export default function GameRecords() {
+  const [page, setpage] = useState(1);
+
   return (
     <VStack gap={0} w={'100%'} h={'100vh'} justify={'space-between'}>
       <VStack
@@ -139,7 +131,7 @@ export default function GameRecords() {
           </Stack>
         </Stack>
       </VStack>
-      <Footer />
+      <Footer page={page} setpage={setpage} />
     </VStack>
   );
 }

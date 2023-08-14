@@ -13,11 +13,11 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
   return (
     <React.StrictMode>
       <ReduxProvider store={store}>
-        <AuthProvider>
-          <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
             <ChakraProvider theme={theme}>{children}</ChakraProvider>
-          </QueryClientProvider>
-        </AuthProvider>
+          </AuthProvider>
+        </QueryClientProvider>
       </ReduxProvider>
     </React.StrictMode>
   );

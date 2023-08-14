@@ -1,32 +1,29 @@
-import * as React from 'react';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  chakra,
-  Hide,
-  Show,
-  Grid,
-  GridItem,
-  Text,
-  Flex,
-  HStack,
-  Box,
-  VStack,
-  Switch,
-} from '@chakra-ui/react';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import {
-  useReactTable,
+  Box,
+  chakra,
+  Flex,
+  Grid,
+  GridItem,
+  HStack,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  VStack,
+} from '@chakra-ui/react';
+import {
+  ColumnDef,
   flexRender,
   getCoreRowModel,
-  ColumnDef,
-  SortingState,
   getSortedRowModel,
+  SortingState,
+  useReactTable,
 } from '@tanstack/react-table';
+import * as React from 'react';
 import { DropdownBlackIcon, DropdownCloseIcon } from 'src/assets/images';
 import { IMobileTransaction, Transaction } from 'src/interfaces/transaction';
 

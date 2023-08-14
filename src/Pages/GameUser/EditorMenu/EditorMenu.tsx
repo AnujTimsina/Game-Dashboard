@@ -43,6 +43,10 @@ export default function EditorMenu({
     modalHandler();
   };
 
+  const passwordHandler = async () => {
+    //
+  };
+
   return (
     <>
       <Menu>
@@ -66,6 +70,7 @@ export default function EditorMenu({
           <MenuItem
             _hover={{ bg: 'cardBg', color: 'white' }}
             borderRadius={'10px'}
+            onClick={passwordHandler}
           >
             Reset Password
           </MenuItem>

@@ -1,38 +1,27 @@
-import React, { useState } from 'react';
 import {
-  Alert,
-  AlertTitle,
   Box,
-  Button,
+  Flex,
   HStack,
   Input,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Spinner,
   Stack,
-  Switch,
   Text,
   VStack,
-  useBreakpointValue,
-  Flex,
-  Spinner,
 } from '@chakra-ui/react';
-import {
-  AddUser,
-  DropdownIcon,
-  ResetIcon,
-  SearchIcon2,
-} from 'src/assets/images';
-import Footer from 'src/Pages/ProfitReport/Footer';
 import { createColumnHelper } from '@tanstack/react-table';
-import { ChevronDownIcon } from '@chakra-ui/icons';
-import { useGetUserTransactions } from 'src/api/user';
-import { IMobileTransaction, Transaction } from 'src/interfaces/transaction';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from 'src/store';
-import { TRANSACTION_TYPES } from 'src/config/constants';
+import { useGetUserTransactions } from 'src/api/user';
+import { DropdownIcon, ResetIcon, SearchIcon2 } from 'src/assets/images';
 import { TransactionTable } from 'src/components/TransactionTable/TransactionTable';
+import { TRANSACTION_TYPES } from 'src/config/constants';
+import { IMobileTransaction, Transaction } from 'src/interfaces/transaction';
+import Footer from 'src/Pages/ProfitReport/Footer';
+import { RootState } from 'src/store';
 
 export default function RechargeRecord() {
   const { id: userId } = useSelector((state: RootState) => state.gameUser);

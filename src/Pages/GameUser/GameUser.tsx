@@ -34,6 +34,7 @@ import { dateFormatter } from 'src/utils/dateFormatter';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/store';
+import { usePostChangeStatus } from 'src/api/auth';
 
 export type GameData = {
   id: JSX.Element;
@@ -60,6 +61,7 @@ export default function GameUser() {
   const [page, setpage] = useState(1);
 
   const { data: gameUsers, isLoading } = useGetSubUsers(userId, page);
+  const { mutateAsync: changeStatusMutateAsync } = usePostChangeStatus();
 
   const columnHelper = createColumnHelper<IUserFormatted>();
 
@@ -77,7 +79,12 @@ export default function GameUser() {
     }),
     columnHelper.accessor('status', {
       cell: (info) => (
-        <Switch size={{ base: 'sm', lg: 'lg' }} variant={'boxy'} />
+        <Switch
+          size={{ base: 'sm', lg: 'lg' }}
+          variant={'boxy'}
+          onChange={(e) => handleChangeStatus(e, info.row.original)}
+          isChecked={info.getValue()}
+        />
       ),
       header: 'Status',
     }),
@@ -137,6 +144,19 @@ export default function GameUser() {
     onOpenAddUser();
   };
 
+  const handleChangeStatus = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    user: IUserFormatted
+  ) => {
+    const { checked } = e.target;
+    const payload = {
+      userName: user.userName,
+      status: checked,
+    };
+    const result = await changeStatusMutateAsync(payload);
+    console.log(result, 'status');
+  };
+
   const userData: IUserFormatted[] | undefined = gameUsers?.results.map(
     (user) => {
       const { history, manager, ...rest } = user;
@@ -166,6 +186,8 @@ export default function GameUser() {
               size={{ base: 'sm', lg: 'lg' }}
               variant={'boxy'}
               isChecked={item.status}
+              onChange={(e) => handleChangeStatus(e, item)}
+              // isChecked={item.status}
             />
           ),
         },

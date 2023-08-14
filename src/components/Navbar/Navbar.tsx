@@ -35,6 +35,7 @@ import {
   FilterIcon,
   LogoutIcon,
   MoveIcon,
+  ProfileIcon,
   ProfileLogo,
   ProfitReport,
   ResetIcon,
@@ -46,6 +47,7 @@ import { useAuth } from '../AuthProvider/AuthProvider';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetUser, updateUser } from 'src/store/user/slices/userSlice';
 import { RootState } from 'src/store';
+import { usePostRefreshToken } from 'src/api/auth';
 
 interface LinkItemProps {
   name: string;
@@ -261,11 +263,13 @@ interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
 const Header = ({ onOpen, ...rest }: MobileProps) => {
-  const { setToken } = useAuth();
+  const { setToken, setRefreshToken } = useAuth();
   const dispatch = useDispatch();
   const gameUser = useSelector((state: RootState) => state.gameUser);
-  const handleLogout = () => {
+
+  const handleLogout = async () => {
     setToken(null);
+    setRefreshToken(null);
     dispatch(resetUser());
   };
 
@@ -296,33 +300,10 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
               </Box>
             </HStack>
           </Show>
+
           <Hide below="lg">
-            <HStack
-              bg={'cardBg'}
-              p={'10px 40px'}
-              borderRadius={'10px'}
-              boxShadow={'0px 2px 2px 0px rgba(0, 0, 0, 0.25)'}
-              gap={'45px'}
-            >
-              <Box bg={'miniCard'} p={'10px'} borderRadius={'10px'}>
-                <ConsoleIcon />
-              </Box>
-              <Box
-                bg={'miniCard'}
-                p={'10px'}
-                borderRadius={'10px'}
-                _selected={{ bg: 'red' }}
-              >
-                <ProfitReport />
-              </Box>
-              <Box bg={'miniCard'} p={'10px'} borderRadius={'10px'}>
-                <UserIcon />
-              </Box>
-            </HStack>
-          </Hide>
-          <Hide below="lg">
-            <HStack w={'100%'} justify={'center'} gap={'1rem'}>
-              <InputGroup bg={'searchBg'} borderRadius={'10px'} maxW={'240px'}>
+            <HStack w={'100%'} gap={'2rem'}>
+              <InputGroup bg={'searchBg'} borderRadius={'10px'} maxW={'300px'}>
                 <InputLeftElement pointerEvents="none">
                   <SearchIcon />
                 </InputLeftElement>
@@ -336,47 +317,67 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
               >
                 <FilterIcon />
               </Box>
+              <HStack gap={'0'}>
+                <HStack
+                  bg={'secondary'}
+                  borderTopLeftRadius={'10px'}
+                  borderBottomLeftRadius={'10px'}
+                  p={{ base: '8px 8px', lg: '10px 15px' }}
+                >
+                  <DollarIcon />
+                  <Text>{gameUser.balance}</Text>
+                </HStack>
+                <Box
+                  borderTopRightRadius={'10px'}
+                  borderBottomRightRadius={'10px'}
+                  p={{ base: '8px', lg: '10px 15px' }}
+                  bg={'btn'}
+                >
+                  <Text>Balance</Text>
+                </Box>
+              </HStack>
+              <HStack
+                bg={'secondary'}
+                p={{ base: '8px', lg: '10px' }}
+                borderRadius={'10px'}
+                cursor={'pointer'}
+                maxW={'124px'}
+              >
+                <ResetIcon />
+                <Text>Reset</Text>
+              </HStack>
             </HStack>
           </Hide>
-          <HStack gap={'0'}>
-            <HStack
-              bg={'secondary'}
-              borderTopLeftRadius={'10px'}
-              borderBottomLeftRadius={'10px'}
-              p={{ base: '8px 8px', lg: '10px 15px' }}
-            >
-              <DollarIcon />
-              <Text>{gameUser.balance}</Text>
-            </HStack>
-            <Box
-              borderTopRightRadius={'10px'}
-              borderBottomRightRadius={'10px'}
-              p={{ base: '8px', lg: '10px 15px' }}
-              bg={'btn'}
-            >
-              <Text>Balance</Text>
-            </Box>
-          </HStack>
+
           <HStack justify={'flex-end'} gap={'1rem'}>
-            <HStack
-              bg={'secondary'}
-              p={{ base: '8px', lg: '10px' }}
-              borderRadius={'10px'}
-              cursor={'pointer'}
-              maxW={'124px'}
-            >
-              <ResetIcon />
-              <Text>Reset</Text>
+            <HStack gap={'0'} position={'relative'}>
+              <Image
+                src={ProfileIcon}
+                border={'2px solid white'}
+                borderRadius={'full'}
+                position={'absolute'}
+                left={'-25px'}
+              />
+              <Box
+                minW={'150px'}
+                bg={'secondary'}
+                p={{ base: '8px', lg: '10px 10px 10px 30px' }}
+                borderLeftRadius={'10px'}
+                cursor={'pointer'}
+                maxW={'124px'}
+              >
+                <Text align={'center'}>{gameUser.userName}</Text>
+              </Box>
+              <Box
+                bg={'yellowBg'}
+                borderRightRadius={'10px'}
+                p={{ base: '8px', lg: '12px' }}
+                onClick={handleLogout}
+                cursor={'pointer'}
+              >
+                <LogoutIcon />
+              </Box>
             </HStack>
-            <Box
-              bg={'yellowBg'}
-              borderRadius={'10px'}
-              p={{ base: '8px', lg: '10px' }}
-              onClick={handleLogout}
-              cursor={'pointer'}
-            >
-              <LogoutIcon />
-            </Box>
             <Hide below="lg">
               <Box>
                 <MoveIcon />

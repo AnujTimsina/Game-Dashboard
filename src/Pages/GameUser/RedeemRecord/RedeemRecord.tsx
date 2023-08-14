@@ -1,37 +1,27 @@
-import React, { useState } from 'react';
 import {
-  Alert,
-  AlertTitle,
   Box,
-  Button,
+  Flex,
   HStack,
   Input,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Spinner,
   Stack,
-  Switch,
   Text,
   VStack,
-  useBreakpointValue,
-  Flex,
-  Spinner,
 } from '@chakra-ui/react';
-import {
-  AddUser,
-  DropdownIcon,
-  ResetIcon,
-  SearchIcon2,
-} from 'src/assets/images';
+import { createColumnHelper } from '@tanstack/react-table';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useGetUserTransactions } from 'src/api/user';
+import { DropdownIcon, ResetIcon, SearchIcon2 } from 'src/assets/images';
+import { TransactionTable } from 'src/components/TransactionTable/TransactionTable';
+import { TRANSACTION_TYPES } from 'src/config/constants';
+import { IMobileTransaction, Transaction } from 'src/interfaces/transaction';
 import Footer from 'src/Pages/ProfitReport/Footer';
 import { RootState } from 'src/store';
-import { useSelector } from 'react-redux';
-import { createColumnHelper } from '@tanstack/react-table';
-import { IMobileTransaction, Transaction } from 'src/interfaces/transaction';
-import { useGetUserTransactions } from 'src/api/user';
-import { TRANSACTION_TYPES } from 'src/config/constants';
-import { TransactionTable } from 'src/components/TransactionTable/TransactionTable';
 
 export default function RedeemRecord() {
   const { id: userId } = useSelector((state: RootState) => state.gameUser);

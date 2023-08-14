@@ -48,7 +48,9 @@ export default function TransactionModal({
   const toast = useToast();
   // const { ToastContainer, toast } = createStandaloneToast();
 
-  const { userName } = useSelector((state: RootState) => state.gameUser);
+  const { userName, id: userId } = useSelector(
+    (state: RootState) => state.gameUser
+  );
 
   const validateSchema = Yup.object().shape({
     rechargeBalance: Yup.number()
@@ -73,8 +75,8 @@ export default function TransactionModal({
 
   const rechargeUser = async (amount: string) => {
     const data = {
-      actionBy: userName,
-      actionTo: user.userName,
+      actionBy: userId,
+      actionTo: user.id,
       amount: amount,
       type: transactionType,
     };
@@ -83,8 +85,8 @@ export default function TransactionModal({
     console.log(result, 'result');
     onClose();
     toast({
-      title: 'Success.',
-      description: 'User Recharged Successfully.',
+      title: <Text color={'white'}>Success.</Text>,
+      description: <Text color={'white'}>User Recharged Successfully.</Text>,
       status: 'success',
       duration: 6000,
       isClosable: true,

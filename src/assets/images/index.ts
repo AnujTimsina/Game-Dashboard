@@ -28,5 +28,6 @@ export { ReactComponent as UsernameIcon } from './user.svg';
 import ProfileLogo from './profile.png';
 import MainLogo from './mainIcon.png';
 import LoginBg from './loginMainBg.png';
+import ProfileIcon from './profileIcon.png';
 
-export { ProfileLogo, MainLogo, LoginBg };
+export { ProfileLogo, MainLogo, LoginBg, ProfileIcon };

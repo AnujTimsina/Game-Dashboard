@@ -1,5 +1,4 @@
-import { Box, Grid, HStack, Text, VStack, Wrap } from '@chakra-ui/react';
-import React from 'react';
+import { Box, Grid, HStack, Text, VStack } from '@chakra-ui/react';
 import { MoneyIcon, PersonIcon } from 'src/assets/images';
 
 // border-radius: 10px;
@@ -61,6 +60,7 @@ export default function Dashboard() {
       subContent: 'Accumulated withdrawal amount',
     },
   ];
+
   return (
     <Grid
       bg={'cardBg'}
