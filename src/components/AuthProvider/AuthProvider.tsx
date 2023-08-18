@@ -3,7 +3,6 @@ import jwtDecode from 'jwt-decode';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { usePostRefreshToken } from 'src/api/auth';
-import { useGetUser } from 'src/api/user';
 import { BACKEND_URL } from 'src/config/config';
 import { IUser } from 'src/interfaces/user';
 import { updateUser } from 'src/store/user/slices/userSlice';
@@ -79,6 +78,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
           const payload = { refreshToken: refreshToken };
 
+          console.log(payload, 'payload resfresh');
           const result = await mutateRefreshToken(payload);
 
           const newAccessToken = result.data.tokens.access.token as string;
@@ -88,7 +88,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           axios.defaults.headers.common[
             'Authorization'
           ] = `Bearer ${newAccessToken}`;
-
+          console.log(result, 'result from inteerceptor');
           processQueue(null, newAccessToken);
           isRefreshing = false;
         } catch (err) {

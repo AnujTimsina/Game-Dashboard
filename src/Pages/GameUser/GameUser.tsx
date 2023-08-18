@@ -6,35 +6,29 @@ import {
   Flex,
   HStack,
   Input,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Spinner,
   Stack,
   Switch,
   Text,
-  VStack,
   useBreakpointValue,
   useDisclosure,
+  useToast,
+  VStack,
 } from '@chakra-ui/react';
 import { createColumnHelper } from '@tanstack/react-table';
-import { AddUser, ResetIcon, SearchIcon2 } from 'src/assets/images';
-import Footer from '../ProfitReport/Footer';
-import { DataTable } from './DataTable';
-import { ChevronDownIcon } from '@chakra-ui/icons';
-import VerticalTable from './MobileDataTable';
-import AddUserModal from './AddUserModal/AddUserModal';
-import RechargeModal from '../../components/TransactionModal/TransactionModal';
-import { useGetSubUsers } from 'src/api/user';
-import { IUser, IUserFormatted } from 'src/interfaces/user';
-import EditorMenu from './EditorMenu/EditorMenu';
-import { IMobileUserData } from 'src/interfaces';
-import { dateFormatter } from 'src/utils/dateFormatter';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from 'src/store';
 import { usePostChangeStatus } from 'src/api/auth';
+import { useGetSubUsers } from 'src/api/user';
+import { AddUser, ResetIcon, SearchIcon2 } from 'src/assets/images';
+import { IMobileUserData } from 'src/interfaces';
+import { IUserFormatted } from 'src/interfaces/user';
+import { RootState } from 'src/store';
+import { dateFormatter } from 'src/utils/dateFormatter';
+import Footer from '../ProfitReport/Footer';
+import AddUserModal from './AddUserModal/AddUserModal';
+import { DataTable } from './DataTable';
+import EditorMenu from './EditorMenu/EditorMenu';
 
 export type GameData = {
   id: JSX.Element;
@@ -51,6 +45,7 @@ export type GameData = {
 
 export default function GameUser() {
   const { id: userId } = useSelector((state: RootState) => state.gameUser);
+  const toast = useToast();
 
   const {
     isOpen: isOpenAddUser,
@@ -60,7 +55,13 @@ export default function GameUser() {
 
   const [page, setpage] = useState(1);
 
-  const { data: gameUsers, isLoading } = useGetSubUsers(userId, page);
+  const {
+    data: gameUsers,
+    isLoading,
+    error,
+    isError,
+  } = useGetSubUsers(userId, page);
+
   const { mutateAsync: changeStatusMutateAsync } = usePostChangeStatus();
 
   const columnHelper = createColumnHelper<IUserFormatted>();
@@ -226,6 +227,19 @@ export default function GameUser() {
       };
     }
   );
+
+  useEffect(() => {
+    if (isError)
+      toast({
+        title: <Text color={'white'}>Error.</Text>,
+        description: <Text color={'white'}>{error.message}</Text>,
+        status: 'error',
+        duration: 6000,
+        isClosable: true,
+        position: 'top',
+      });
+  }, [isError]);
+
   return (
     <VStack gap={0} w={'100%'} h={'100vh'} justify={'space-between'}>
       <Alert size="md" margin={'15px'}>

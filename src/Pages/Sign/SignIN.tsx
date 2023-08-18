@@ -1,52 +1,40 @@
 import {
   Box,
   Button,
-  Checkbox,
-  Container,
-  Divider,
   Flex,
   FormControl,
-  FormLabel,
-  Heading,
-  HStack,
   Image,
   Input,
   InputGroup,
   InputLeftElement,
-  Link,
   Stack,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
-import { OAuthButtonGroup } from './OAuthButtonGroup';
-import { PasswordField } from './PasswordField';
-import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { api } from 'src/utils/api';
-import { usePost } from 'src/utils/reactQuery';
-import { useAuth } from 'src/components/AuthProvider/AuthProvider';
-import { BACKEND_URL } from 'src/config/config';
-import { apiRoutes, pageRoutes } from 'src/routes/pageRoutes';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateUser } from 'src/store/user/slices/userSlice';
-import { RootState } from 'src/store';
-import { IUser } from 'src/interfaces/user';
+import { usePostLoginUser } from 'src/api/auth';
 import { LoginBg, MainLogo, UsernameIcon } from 'src/assets/images';
+import { useAuth } from 'src/components/AuthProvider/AuthProvider';
+import { PasswordField } from './PasswordField';
 
 const SignIN = () => {
-  // const { login } = useUtils();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { setToken, setRefreshToken } = useAuth();
+  const toast = useToast();
 
   const [username, setusername] = useState('');
   const [password, setpassword] = useState('');
 
-  const loginMutation = usePost<
-    { userName: string; password: string; logonAddress: string },
-    any
-  >(`${BACKEND_URL}${apiRoutes.login}`);
+  const {
+    mutateAsync: loginMutation,
+    isLoading,
+    isError,
+    error,
+  } = usePostLoginUser();
 
   const handleLogin = async () => {
     const data = {
@@ -54,7 +42,7 @@ const SignIN = () => {
       password: password,
       logonAddress: '192.168.1.67',
     };
-    const result = await loginMutation.mutateAsync(data);
+    const result = await loginMutation(data);
 
     setRefreshToken(result.data.tokens.refresh.token as string);
     setToken(result.data.tokens.access.token as string);
@@ -69,6 +57,18 @@ const SignIN = () => {
   const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value) setpassword(e.target.value);
   };
+
+  useEffect(() => {
+    if (isError)
+      toast({
+        title: <Text color={'white'}>Error.</Text>,
+        description: <Text color={'white'}>{error.message}</Text>,
+        status: 'error',
+        duration: 6000,
+        isClosable: true,
+        position: 'top',
+      });
+  }, [isError]);
 
   return (
     <VStack
@@ -135,7 +135,7 @@ const SignIN = () => {
                 color="#FFF"
                 borderRadius="10px"
                 onClick={handleLogin}
-                isLoading={loginMutation.isLoading}
+                isLoading={isLoading}
                 background={'btn'}
                 box-shadow="0px 3px 10px 0px rgba(0, 0, 0, 0.35)"
               >

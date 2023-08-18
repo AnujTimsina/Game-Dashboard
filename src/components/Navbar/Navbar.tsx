@@ -2,16 +2,13 @@ import { CloseIcon } from '@chakra-ui/icons';
 import {
   Box,
   BoxProps,
-  CloseButton,
-  Container,
   Drawer,
-  DrawerCloseButton,
   DrawerContent,
   DrawerOverlay,
   Flex,
   FlexProps,
-  HStack,
   Hide,
+  HStack,
   Image,
   Input,
   InputGroup,
@@ -19,35 +16,29 @@ import {
   Link,
   Show,
   Text,
-  VStack,
   useDisclosure,
+  VStack,
 } from '@chakra-ui/react';
-import React, { Children, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import {
-  ConsoleIcon,
   DollarIcon,
-  DrawerCloseIcon,
   DrawerIcon,
-  DropdownCloseIcon,
   DropdownIcon,
-  FilesIcon,
   FilterIcon,
   LogoutIcon,
   MoveIcon,
   ProfileIcon,
   ProfileLogo,
-  ProfitReport,
   ResetIcon,
   SearchIcon,
-  UserIcon,
 } from 'src/assets/images';
+import ChangePasswordModal from 'src/Pages/GameUser/EditorMenu/Modal/ResetPasswordModal/ChangePasswordModal';
 import { pageRoutes } from 'src/routes/pageRoutes';
-import { useAuth } from '../AuthProvider/AuthProvider';
-import { useDispatch, useSelector } from 'react-redux';
-import { resetUser, updateUser } from 'src/store/user/slices/userSlice';
 import { RootState } from 'src/store';
-import { usePostRefreshToken } from 'src/api/auth';
+import { resetUser } from 'src/store/user/slices/userSlice';
+import { useAuth } from '../AuthProvider/AuthProvider';
 
 interface LinkItemProps {
   name: string;
@@ -267,6 +258,12 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
   const dispatch = useDispatch();
   const gameUser = useSelector((state: RootState) => state.gameUser);
 
+  const {
+    isOpen: isOpenResetPassword,
+    onClose: onCloseResetPassword,
+    onOpen: onOpenResetPassword,
+  } = useDisclosure();
+
   const handleLogout = async () => {
     setToken(null);
     setRefreshToken(null);
@@ -342,6 +339,7 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
                 borderRadius={'10px'}
                 cursor={'pointer'}
                 maxW={'124px'}
+                onClick={onOpenResetPassword}
               >
                 <ResetIcon />
                 <Text>Reset</Text>
@@ -409,6 +407,10 @@ const Header = ({ onOpen, ...rest }: MobileProps) => {
           </HStack>
         </Show>
       </VStack>
+      <ChangePasswordModal
+        isOpen={isOpenResetPassword}
+        onClose={onCloseResetPassword}
+      />
     </Flex>
   );
 };

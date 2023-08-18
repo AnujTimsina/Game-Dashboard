@@ -10,10 +10,11 @@ import {
   Spinner,
   Stack,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import { createColumnHelper } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useGetUserTransactions } from 'src/api/user';
 import { DropdownIcon, ResetIcon, SearchIcon2 } from 'src/assets/images';
@@ -25,6 +26,7 @@ import { RootState } from 'src/store';
 
 export default function RechargeRecord() {
   const { id: userId } = useSelector((state: RootState) => state.gameUser);
+  const toast = useToast();
 
   const columnHelper = createColumnHelper<Transaction>();
 
@@ -67,6 +69,8 @@ export default function RechargeRecord() {
     data: transactions,
     isLoading,
     isFetching,
+    error,
+    isError,
   } = useGetUserTransactions(userId, page, TRANSACTION_TYPES.RECHARGE);
 
   const mobileTransactions: IMobileTransaction[] | undefined =
@@ -100,6 +104,18 @@ export default function RechargeRecord() {
         },
       };
     });
+
+  useEffect(() => {
+    if (isError)
+      toast({
+        title: <Text color={'white'}>Error.</Text>,
+        description: <Text color={'white'}>{error.message}</Text>,
+        status: 'error',
+        duration: 6000,
+        isClosable: true,
+        position: 'top',
+      });
+  }, [isError]);
 
   return (
     <VStack gap={0} w={'100%'} h={'100vh'} justify={'space-between'}>

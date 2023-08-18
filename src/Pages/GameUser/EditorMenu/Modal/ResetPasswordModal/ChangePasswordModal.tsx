@@ -1,12 +1,8 @@
-import { ErrorMessage, Form, Formik, useFormik } from 'formik';
 import {
   Box,
   Button,
-  Checkbox,
-  Flex,
   FormControl,
   FormLabel,
-  HStack,
   Input,
   Modal,
   ModalBody,
@@ -14,37 +10,23 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Radio,
-  RadioGroup,
-  Stack,
   Text,
-  VStack,
   useToast,
+  VStack,
 } from '@chakra-ui/react';
-import * as Yup from 'yup';
-import { useState } from 'react';
-import { useFetch, usePost } from 'src/utils/reactQuery';
-import { BACKEND_URL } from 'src/config/config';
-import { apiRoutes } from 'src/routes/pageRoutes';
-import { createStandaloneToast } from '@chakra-ui/react';
+import { useEffect } from 'react';
+import { Form, Formik } from 'formik';
 import { useSelector } from 'react-redux';
+import { usePostChangePassword } from 'src/api/auth';
 import { RootState } from 'src/store';
-import { IUserFormatted } from 'src/interfaces/user';
-import { TRANSACTION_TYPES } from 'src/config/constants';
+import * as Yup from 'yup';
 
 interface IModalProps {
   isOpen: boolean;
   onClose: () => void;
-  user: IUserFormatted;
-  transactionType: TRANSACTION_TYPES;
 }
 
-export default function TransactionModal({
-  isOpen,
-  onClose,
-  user,
-  transactionType,
-}: IModalProps) {
+export default function ChangePasswordModal({ isOpen, onClose }: IModalProps) {
   const toast = useToast();
   // const { ToastContainer, toast } = createStandaloneToast();
 
@@ -53,35 +35,40 @@ export default function TransactionModal({
   );
 
   const validateSchema = Yup.object().shape({
-    rechargeBalance: Yup.number()
+    oldPassword: Yup.string().required('This field is required'),
+    newPassword: Yup.string()
       .required('This field is required')
-      .test(
-        'Is positive?',
-        'The number must be greater than 0.',
-        (value) => value > 0
+      .min(8, 'Pasword must be 8 or more characters')
+      .matches(
+        /(?=.*[a-z])(?=.*[A-Z])\w+/,
+        'Password ahould contain at least one uppercase and lowercase character'
+      )
+      .matches(/\d/, 'Password should contain at least one number')
+      .matches(
+        /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/,
+        'Password should contain at least one special character'
       ),
+    confirmNewPassword: Yup.string().oneOf(
+      [Yup.ref('newPassword'), null!],
+      'Passwords must match'
+    ),
   });
 
-  console.log(user, 'user');
-  const createRechargeTransactionMutation = usePost<
-    {
-      actionBy: string;
-      actionTo: string;
-      amount: number;
-      type: number;
-    },
-    any
-  >(`${BACKEND_URL}${apiRoutes.transactions}`);
+  const {
+    mutateAsync: changePasswordMutation,
+    isLoading,
+    isError,
+    error,
+  } = usePostChangePassword();
 
-  const rechargeUser = async (amount: string) => {
+  const passwordHandler = async (newPassword: string, oldPassword: string) => {
     const data = {
-      actionBy: userId,
-      actionTo: user.id,
-      amount: amount,
-      type: transactionType,
+      userId: userId,
+      newPassword: newPassword,
+      currentPassword: oldPassword,
     };
 
-    const result = await createRechargeTransactionMutation.mutateAsync(data);
+    const result = await changePasswordMutation(data);
     console.log(result, 'result');
     onClose();
     toast({
@@ -94,20 +81,32 @@ export default function TransactionModal({
     });
   };
 
+  useEffect(() => {
+    if (isError)
+      toast({
+        title: <Text color={'white'}>Error.</Text>,
+        description: <Text color={'white'}>{error.message}</Text>,
+        status: 'error',
+        duration: 6000,
+        isClosable: true,
+        position: 'top',
+      });
+  }, [isError]);
+
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
       <ModalOverlay />
       <ModalContent bg={'modalBg'} color={'modalText'} borderRadius={'10px'}>
         <Formik
           initialValues={{
-            account: user.userName,
-            customerBalance: user.balance,
-            availableBalance: '0',
-            rechargeBalance: '',
+            account: userName,
+            oldPassword: '',
+            newPassword: '',
+            confirmNewPassword: '',
           }}
           validationSchema={validateSchema}
           onSubmit={async (values) => {
-            await rechargeUser(values.rechargeBalance);
+            await passwordHandler(values.newPassword, values.oldPassword);
           }}
         >
           {(formik) => (
@@ -117,9 +116,7 @@ export default function TransactionModal({
                 fontWeight={'700'}
                 boxShadow={'0px 4px 18px 0px rgba(0, 0, 0, 0.15)'}
               >
-                {transactionType == TRANSACTION_TYPES.RECHARGE
-                  ? 'RECHARGE'
-                  : 'REDEEM'}
+                CHANGE PASSWORD
               </ModalHeader>
               <ModalBody
                 boxShadow="0px 2px 9px 0px rgba(0, 0, 0, 0.15)"
@@ -141,7 +138,6 @@ export default function TransactionModal({
                         id="account"
                         name="account"
                         type="text"
-                        // variant="filled"
                         onChange={formik.handleChange}
                         value={formik.values.account}
                         border="1px solid rgba(30, 30, 30, 0.35)"
@@ -152,83 +148,78 @@ export default function TransactionModal({
                         <Text variant={'error'}>{formik.errors.account}</Text>
                       )}
                     </FormControl>
-
-                    <FormControl>
-                      <FormLabel
-                        htmlFor="customerBalance"
-                        fontFamily={'Open Sans'}
-                        color="modalText"
-                        fontSize="0.875rem"
-                        fontWeight=" 600"
-                      >
-                        Customer Balance
-                      </FormLabel>
-                      <Input
-                        id="customerBalance"
-                        name="customerBalance"
-                        type="number"
-                        onChange={formik.handleChange}
-                        value={formik.values.customerBalance}
-                        border="1px solid rgba(30, 30, 30, 0.35)"
-                        _hover={{ border: '1px solid blue.500' }}
-                        isDisabled
-                      />
-                      {formik.errors.customerBalance && (
-                        <Text variant={'error'}>
-                          {formik.errors.customerBalance}
-                        </Text>
-                      )}
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel
-                        htmlFor="availableBalance"
-                        fontFamily={'Open Sans'}
-                        color="modalText"
-                        fontSize="0.875rem"
-                        fontWeight=" 600"
-                      >
-                        Available Balance
-                      </FormLabel>
-                      <Input
-                        id="availableBalance"
-                        name="availableBalance"
-                        type="number"
-                        onChange={formik.handleChange}
-                        value={formik.values.availableBalance}
-                        border="1px solid rgba(30, 30, 30, 0.35)"
-                        _hover={{ border: '1px solid blue.500' }}
-                        isDisabled
-                      />
-                      {formik.errors.availableBalance && (
-                        <Text variant={'error'}>
-                          {formik.errors.availableBalance}
-                        </Text>
-                      )}
-                    </FormControl>
                     <FormControl isRequired>
                       <FormLabel
-                        htmlFor="rechargeBalance"
+                        htmlFor="oldPassword"
                         fontFamily={'Open Sans'}
                         color="modalText"
                         fontSize="0.875rem"
                         fontWeight=" 600"
                       >
-                        {transactionType == TRANSACTION_TYPES.RECHARGE
-                          ? 'Recharge Balance'
-                          : 'Redeem Balance'}
+                        Current Password
                       </FormLabel>
                       <Input
-                        id="rechargeBalance"
-                        name="rechargeBalance"
-                        type="number"
+                        id="oldPassword"
+                        name="oldPassword"
+                        type="password"
                         onChange={formik.handleChange}
-                        value={formik.values.rechargeBalance}
+                        value={formik.values.oldPassword}
                         border="1px solid rgba(30, 30, 30, 0.35)"
                         _hover={{ border: '1px solid blue.500' }}
                       />
-                      {formik.errors.rechargeBalance && (
+                      {formik.errors.oldPassword && (
                         <Text variant={'error'}>
-                          {formik.errors.rechargeBalance}
+                          {formik.errors.oldPassword}
+                        </Text>
+                      )}
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel
+                        htmlFor="newPassword"
+                        fontFamily={'Open Sans'}
+                        color="modalText"
+                        fontSize="0.875rem"
+                        fontWeight=" 600"
+                      >
+                        New Password
+                      </FormLabel>
+                      <Input
+                        id="newPassword"
+                        name="newPassword"
+                        type="password"
+                        onChange={formik.handleChange}
+                        value={formik.values.newPassword}
+                        border="1px solid rgba(30, 30, 30, 0.35)"
+                        _hover={{ border: '1px solid blue.500' }}
+                      />
+                      {formik.errors.newPassword && (
+                        <Text variant={'error'}>
+                          {formik.errors.newPassword}
+                        </Text>
+                      )}
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel
+                        htmlFor="confirmNewPassword"
+                        fontFamily={'Open Sans'}
+                        color="modalText"
+                        fontSize="0.875rem"
+                        fontWeight=" 600"
+                      >
+                        Confirm New Password
+                      </FormLabel>
+                      <Input
+                        id="confirmNewPassword"
+                        name="confirmNewPassword"
+                        type="password"
+                        onChange={formik.handleChange}
+                        value={formik.values.confirmNewPassword}
+                        border="1px solid rgba(30, 30, 30, 0.35)"
+                        _hover={{ border: '1px solid blue.500' }}
+                      />
+                      {formik.errors.confirmNewPassword && (
+                        <Text variant={'error'}>
+                          {formik.errors.confirmNewPassword}
                         </Text>
                       )}
                     </FormControl>
@@ -239,6 +230,7 @@ export default function TransactionModal({
                 bg="#F5F5F5"
                 boxShadow="0px 2px 2px 0px rgba(0, 0, 0, 0.15), 0px -2px 2px 0px rgba(0, 0, 0, 0.10)"
                 borderBottomRadius={'10px'}
+                gap={'1rem'}
               >
                 <Button onClick={onClose} color={'blueBg'}>
                   Cancel
@@ -248,9 +240,10 @@ export default function TransactionModal({
                   bg={'blueBg'}
                   _hover={{ color: 'none' }}
                   disabled={formik.isSubmitting}
-                  isLoading={createRechargeTransactionMutation.isLoading}
+                  isLoading={isLoading}
+                  color={'white'}
                 >
-                  Save
+                  Confirm
                 </Button>
               </ModalFooter>
             </Form>

@@ -22,11 +22,12 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFetch, usePost } from 'src/utils/reactQuery';
 import { BACKEND_URL } from 'src/config/config';
 import { apiRoutes } from 'src/routes/pageRoutes';
 import { createStandaloneToast } from '@chakra-ui/react';
+import { usePostAddUser } from 'src/api/user';
 
 interface IModalProps {
   isOpen: boolean;
@@ -67,15 +68,12 @@ export default function AddUserModal({ isOpen, onClose }: IModalProps) {
     ),
   });
 
-  const createUserMutation = usePost<
-    {
-      userName: string;
-      agentName: string;
-      password: string;
-    },
-    any
-  >(`${BACKEND_URL}${apiRoutes.addUser}`);
-
+  const {
+    mutateAsync: createUserMutation,
+    isLoading,
+    isError,
+    error,
+  } = usePostAddUser();
   const addUser = async (
     usermame: string,
     agentName: string,
@@ -86,18 +84,30 @@ export default function AddUserModal({ isOpen, onClose }: IModalProps) {
       agentName: agentName,
       password: password,
     };
-    const result = await createUserMutation.mutateAsync(data);
+    const result = await createUserMutation(data);
     console.log(result, 'result');
     onClose();
     toast({
-      title: 'Success.',
-      description: 'Created User Successfully.',
+      title: <Text color={'white'}>Success.</Text>,
+      description: <Text>Created User Successfully.</Text>,
       status: 'success',
       duration: 6000,
       isClosable: true,
       position: 'top',
     });
   };
+
+  useEffect(() => {
+    if (isError)
+      toast({
+        title: <Text color={'white'}>Error.</Text>,
+        description: <Text color={'white'}>{error.message}</Text>,
+        status: 'error',
+        duration: 6000,
+        isClosable: true,
+        position: 'top',
+      });
+  }, [isError]);
 
   return (
     <Modal
@@ -444,7 +454,7 @@ export default function AddUserModal({ isOpen, onClose }: IModalProps) {
                   bg={'blueBg'}
                   _hover={{ color: 'none' }}
                   disabled={formik.isSubmitting}
-                  isLoading={createUserMutation.isLoading}
+                  isLoading={isLoading}
                   // onClick={onClose}
                 >
                   Save

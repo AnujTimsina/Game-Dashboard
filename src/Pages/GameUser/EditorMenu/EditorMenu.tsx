@@ -8,9 +8,10 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import TransactionModal from 'src/components/TransactionModal/TransactionModal';
+import TransactionModal from 'src/Pages/GameUser/EditorMenu/Modal/TransactionModal/TransactionModal';
 import { TRANSACTION_TYPES } from 'src/config/constants';
 import { IUserFormatted } from 'src/interfaces/user';
+import ResetPasswordModal from './Modal/ResetPasswordModal/ResetPasswordModal';
 export default function EditorMenu({
   selectedValue,
   user,
@@ -22,6 +23,11 @@ export default function EditorMenu({
     isOpen: isOpenRecharge,
     onClose: onCloseRecharge,
     onOpen: onOpenRecharge,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenResetPassword,
+    onClose: onCloseResetPassword,
+    onOpen: onOpenResetPassword,
   } = useDisclosure();
 
   const [selectedUser, setSelectedUser] = useState<IUserFormatted | null>(null);
@@ -44,7 +50,8 @@ export default function EditorMenu({
   };
 
   const passwordHandler = async () => {
-    //
+    setSelectedUser(user);
+    onOpenResetPassword();
   };
 
   return (
@@ -95,6 +102,14 @@ export default function EditorMenu({
           onClose={onCloseRecharge}
           user={selectedUser}
           transactionType={transactionType}
+        />
+      )}
+      {selectedUser && (
+        <ResetPasswordModal
+          isOpen={isOpenResetPassword}
+          onClose={onCloseResetPassword}
+          user={selectedUser}
+          // transactionType={transactionType}
         />
       )}
     </>
