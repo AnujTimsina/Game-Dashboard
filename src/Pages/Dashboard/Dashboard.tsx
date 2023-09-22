@@ -1,4 +1,5 @@
 import { Box, Grid, HStack, Text, VStack } from '@chakra-ui/react';
+import { useGetStats } from 'src/api/transactions';
 import { MoneyIcon, PersonIcon } from 'src/assets/images';
 
 // border-radius: 10px;
@@ -7,56 +8,59 @@ import { MoneyIcon, PersonIcon } from 'src/assets/images';
 // background: #1D2331;
 // box-shadow: ;
 export default function Dashboard() {
+  const { data } = useGetStats();
+  console.log(data);
+
   const consoleCards: ConsoleCardsProps[] = [
     {
       icon: <PersonIcon />,
-      mainContent: '0',
+      mainContent: (data as any)?.totalSubUsers,
       subContent: 'Total number of players registered',
     },
-    {
-      icon: <PersonIcon />,
-      mainContent: '0',
-      subContent: 'Number of people recharged yesterday',
-    },
-    {
-      icon: <PersonIcon />,
-      mainContent: '0',
-      subContent: 'Number of withdrawal yesterday',
-    },
-    {
-      icon: <PersonIcon />,
-      mainContent: '0',
-      subContent: 'Active Population',
-    },
-    {
-      icon: <PersonIcon />,
-      mainContent: '0',
-      subContent: 'Number of new registrations yesterday',
-    },
-    {
-      icon: <PersonIcon />,
-      mainContent: '0',
-      subContent: 'Recharge amount yesterday',
-    },
+    // {
+    //   icon: <PersonIcon />,
+    //   mainContent: '0',
+    //   subContent: 'Number of people recharged yesterday',
+    // },
+    // {
+    //   icon: <PersonIcon />,
+    //   mainContent: '0',
+    //   subContent: 'Number of withdrawal yesterday',
+    // },
+    // {
+    //   icon: <PersonIcon />,
+    //   mainContent: '0',
+    //   subContent: 'Active Population',
+    // },
+    // {
+    //   icon: <PersonIcon />,
+    //   mainContent: '0',
+    //   subContent: 'Number of new registrations yesterday',
+    // },
+    // {
+    //   icon: <PersonIcon />,
+    //   mainContent: '0',
+    //   subContent: 'Recharge amount yesterday',
+    // },
 
+    // {
+    //   icon: <MoneyIcon />,
+    //   mainContent: '0',
+    //   subContent: 'Amount withdrawn yesterday',
+    // },
     {
       icon: <MoneyIcon />,
-      mainContent: '0',
-      subContent: 'Amount withdrawn yesterday',
+      mainContent: (data as any)?.rechargeAmount - (data as any)?.redeemAmount,
+      subContent: 'Total Income',
     },
     {
       icon: <MoneyIcon />,
-      mainContent: '0',
-      subContent: 'Income yesterday',
-    },
-    {
-      icon: <MoneyIcon />,
-      mainContent: '0',
+      mainContent: (data as any)?.rechargeAmount,
       subContent: 'Accumulated recharge amount',
     },
     {
       icon: <MoneyIcon />,
-      mainContent: '0',
+      mainContent: (data as any)?.redeemAmount,
       subContent: 'Accumulated withdrawal amount',
     },
   ];

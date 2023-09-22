@@ -70,15 +70,17 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const handle401Error = async (error: any) => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+    const payload = { refreshToken: refreshToken };
+    if (
+      error.response.status === 401 &&
+      originalRequest.data == JSON.stringify(payload) &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
 
       if (!isRefreshing) {
         isRefreshing = true;
         try {
-          const payload = { refreshToken: refreshToken };
-
-          console.log(payload, 'payload resfresh');
           const result = await mutateRefreshToken(payload);
 
           const newAccessToken = result.data.tokens.access.token as string;
