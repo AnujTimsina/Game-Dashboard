@@ -1,11 +1,10 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { BrowserRouter } from 'react-router-dom';
-import AuthProvider from 'src/components/AuthProvider/AuthProvider';
 import { Provider as ReduxProvider } from 'react-redux';
-import theme from 'src/theme/theme';
+import AuthProvider from 'src/components/AuthProvider/AuthProvider';
 import { store } from 'src/store';
+import theme from 'src/theme/theme';
 
 const Provider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient();

@@ -22,7 +22,7 @@ import { usePostChangeStatus } from 'src/api/auth';
 import { useGetSubUsers } from 'src/api/user';
 import { AddUser, ResetIcon, SearchIcon2 } from 'src/assets/images';
 import { IMobileUserData } from 'src/interfaces';
-import { IUserFormatted } from 'src/interfaces/user';
+import { IUser, IUserFormatted } from 'src/interfaces/user';
 import { RootState } from 'src/store';
 import { dateFormatter } from 'src/utils/dateFormatter';
 import Footer from '../ProfitReport/Footer';
@@ -62,7 +62,10 @@ export default function GameUser() {
     isError,
   } = useGetSubUsers(userId, page);
 
-  const { mutateAsync: changeStatusMutateAsync } = usePostChangeStatus();
+  const { mutateAsync: changeStatusMutateAsync } = usePostChangeStatus(
+    userId,
+    page
+  );
 
   const columnHelper = createColumnHelper<IUserFormatted>();
 
@@ -231,8 +234,8 @@ export default function GameUser() {
   useEffect(() => {
     if (isError)
       toast({
-        title: <Text color={'white'}>Error.</Text>,
-        description: <Text color={'white'}>{error.message}</Text>,
+        title: 'Error',
+        description: error.message,
         status: 'error',
         duration: 6000,
         isClosable: true,
